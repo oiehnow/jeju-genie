@@ -1,0 +1,20 @@
+# 로컬 실행: docker compose up -d --build  →  http://localhost:8090
+# LLM/임베딩은 호스트 Ollama(host.docker.internal:11434)를 사용한다.
+# GPT 키가 생기면 .env 의 OPENAI_API_KEY 만 채우면 됨 (Ollama 불필요해짐).
+services:
+  jeju-genie:
+    build: .
+    ports:
+      - "8090:8080"          # 8080은 로컬 Airflow가 점유 중이라 8090 사용
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    volumes:
+      - chroma-data:/srv/chroma_data   # 인덱스 영속화 (재시작해도 유지)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  chroma-data:

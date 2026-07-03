@@ -1,0 +1,37 @@
+/* ─────────────────────────────────────────────────────────────
+   제주 지니 디자인 토큰 — UI 시안이 오면 이 파일 값만 교체하세요.
+   말풍선/배경/폰트/마스코트 크기가 전부 여기서 제어됩니다.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  /* 브랜드 색 (시안 UI.png: 흰 헤더 + 검정 타이틀) */
+  --color-bg: #f4f9fb;
+  --color-header: #ffffff;
+  --color-header-text: #111111;
+  --color-header-divider: #111111;
+  --color-genie-bubble: #ffffff;
+  --color-genie-text: #1e293b;
+  --color-user-bubble: #0ea5e9;
+  --color-user-text: #ffffff;
+  --color-accent: #f59e0b;          /* 감귤색 포인트 */
+  --color-source-chip: #e0f2fe;
+  --color-source-chip-text: #0369a1;
+
+  /* 말풍선 */
+  --bubble-radius: 18px;
+  --bubble-shadow: 0 2px 8px rgba(14, 116, 144, 0.08);
+
+  /* 마스코트 */
+  --mascot-size: 72px;              /* 헤더 원형 액자 */
+  --mascot-bg: #ffffff;
+  --floating-mascot-width: 200px;   /* 채팅 좌측 플로팅 마스코트 */
+
+  /* 타이포 */
+  --font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-family);
+  background: var(--color-bg);
+}
