@@ -3,11 +3,11 @@
    말풍선/배경/폰트/마스코트 크기가 전부 여기서 제어됩니다.
    ───────────────────────────────────────────────────────────── */
 :root {
-  /* 브랜드 색 (시안 UI.png: 흰 헤더 + 검정 타이틀) */
+  /* 브랜드 색 — 헤더는 제주 바다-초록의 부드러운 그라데이션 (눈 편한 톤) */
   --color-bg: #f4f9fb;
-  --color-header: #ffffff;
-  --color-header-text: #111111;
-  --color-header-divider: #111111;
+  --header-gradient: linear-gradient(120deg, #5fb0d4 0%, #6ec6b4 60%, #8fd3a8 100%);
+  --color-header-text: #ffffff;
+  --header-title-size: 2.3rem;
   --color-genie-bubble: #ffffff;
   --color-genie-text: #1e293b;
   --color-user-bubble: #0ea5e9;
@@ -21,9 +21,9 @@
   --bubble-shadow: 0 2px 8px rgba(14, 116, 144, 0.08);
 
   /* 마스코트 */
-  --mascot-size: 72px;              /* 헤더 원형 액자 */
+  --mascot-size: 88px;              /* 헤더 원형 액자 */
   --mascot-bg: #ffffff;
-  --floating-mascot-width: 200px;   /* 채팅 좌측 플로팅 마스코트 */
+  --floating-mascot-width: 600px;   /* 채팅 좌측 플로팅 마스코트 (기존 200px의 3배) */
 
   /* 타이포 */
   --font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
