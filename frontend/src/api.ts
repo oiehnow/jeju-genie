@@ -6,9 +6,16 @@ export interface Source {
   url: string;
 }
 
+/** 실시간 API로 조회된 도구 (UI '실시간 데이터' 배지용) */
+export interface LiveSource {
+  name: string;
+  label: string;
+}
+
 export interface ChatEvents {
   onToken: (token: string) => void;
   onSources: (sources: Source[]) => void;
+  onLive: (live: LiveSource[]) => void;
   onDone: () => void;
   onError: (err: unknown) => void;
 }
@@ -42,6 +49,7 @@ export async function streamChat(
         const data = JSON.parse(line.slice(6));
         if (data.type === "token") events.onToken(data.content);
         else if (data.type === "sources") events.onSources(data.sources);
+        else if (data.type === "live") events.onLive(data.live);
         else if (data.type === "done") events.onDone();
       }
     }

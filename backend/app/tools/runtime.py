@@ -12,18 +12,23 @@ from app.tools.base import enabled_tools
 logger = logging.getLogger("jeju-genie.tools")
 
 
-async def run_live_tools(provider, message: str) -> str:
+async def run_live_tools(provider, message: str) -> tuple[str, list[dict]]:
+    """실시간 도구를 실행. (프롬프트 주입용 텍스트, 실제로 값을 낸 도구 목록) 반환.
+
+    두 번째 값은 UI '실시간 데이터' 배지용 — [{"name","label"}, ...].
+    """
     tools = {t.name: t for t in enabled_tools()}
     if not tools:
-        return ""
+        return "", []
     schemas = [t.openai_schema() for t in tools.values()]
     try:
         calls = await provider.decide_tool_calls(message, schemas)
     except Exception:
         logger.exception("도구 선택 실패")
-        return ""
+        return "", []
 
     results: list[str] = []
+    used: list[dict] = []
     for name, args in calls:
         tool = tools.get(name)
         if not tool:
@@ -32,7 +37,8 @@ async def run_live_tools(provider, message: str) -> str:
             out = tool.run(**args)
             if out:
                 results.append(f"## {tool.name}\n{out}")
+                used.append({"name": tool.name, "label": tool.label or tool.name})
         except Exception as e:
             logger.warning("도구 '%s' 실행 실패: %s", name, e)
             results.append(f"## {tool.name}\n(조회 실패: {type(e).__name__})")
-    return "\n\n".join(results)
+    return "\n\n".join(results), used

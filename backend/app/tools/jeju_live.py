@@ -20,6 +20,7 @@ def _get(url: str, params: dict | None = None) -> httpx.Response:
 @register_tool
 class JejuWeatherTool(BaseTool):
     name = "jeju_airport_weather"
+    label = "제주공항 날씨"
     description = "제주공항(ICAO RKPC)의 실시간 항공기상(METAR: 기온/바람/시정/구름/기압)을 조회한다. 제주 현재 날씨/공항 기상 질문에 사용."
     parameters = {"type": "object", "properties": {}}
 
@@ -53,6 +54,7 @@ class JejuWeatherTool(BaseTool):
 @register_tool
 class JejuFuelTool(BaseTool):
     name = "jeju_fuel_price"
+    label = "제주 유가"
     description = "제주도 평균 주유소 유가(휘발유/경유 등)를 오피넷에서 실시간 조회한다. 기름값/주유 질문에 사용."
     parameters = {"type": "object", "properties": {}}
 
@@ -81,6 +83,7 @@ class JejuFuelTool(BaseTool):
 @register_tool
 class JejuTrafficTool(BaseTool):
     name = "jeju_realtime_traffic"
+    label = "제주 실시간 교통"
     description = "제주 도로의 실시간 교통정보(구간별 통행속도/혼잡)를 조회한다. 지금 교통/도로 상황 질문에 사용."
     parameters = {"type": "object", "properties": {}}
 
@@ -105,6 +108,7 @@ class JejuTrafficTool(BaseTool):
 @register_tool
 class JejuGeocodeTool(BaseTool):
     name = "jeju_place_search"
+    label = "제주 장소검색"
     description = "제주 장소명/주소로 좌표와 위치 정보를 검색한다(VWorld). 특정 장소의 위치/좌표 질문에 사용."
     parameters = {
         "type": "object",
@@ -137,6 +141,7 @@ class JejuGeocodeTool(BaseTool):
 @register_tool
 class JejuDataHubStatTool(BaseTool):
     name = "jeju_statistics"
+    label = "제주 통계"
     description = ("제주 통계/시계열 데이터(버스 승객수, 카드소비, 입도객, 유동인구, 전기차 충전, 농산물 시세, "
                   "일별 기상 등 날짜 기반 수치)를 조회한다. 특정 기간 통계 질문에 사용.")
     parameters = {

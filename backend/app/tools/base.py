@@ -20,6 +20,7 @@ class BaseTool(ABC):
     """실시간 데이터 도구 인터페이스."""
 
     name: str = "base"
+    label: str = ""  # UI '실시간 데이터' 배지에 표시할 짧은 한국어 이름 (비면 name 사용)
     description: str = ""
     # OpenAI function-calling parameters 스키마 (JSON Schema)
     parameters: dict = {"type": "object", "properties": {}}

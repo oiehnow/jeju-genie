@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { streamChat, type Source } from "./api";
+import { streamChat, type LiveSource, type Source } from "./api";
 import FloatingMascot, { type MascotState } from "./components/FloatingMascot";
 import MascotSlot from "./components/MascotSlot";
 import MessageBubble, { type Message } from "./components/MessageBubble";
@@ -54,6 +54,7 @@ export default function App() {
         patchLast((m) => ({ ...m, content: m.content + t }));
       },
       onSources: (sources: Source[]) => patchLast((m) => ({ ...m, sources })),
+      onLive: (live: LiveSource[]) => patchLast((m) => ({ ...m, live })),
       onDone: () => {
         patchLast((m) => ({ ...m, streaming: false }));
         setBusy(false);

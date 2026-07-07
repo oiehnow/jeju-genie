@@ -84,9 +84,13 @@ async def chat(req: ChatRequest):
             return
 
         hits = store().query(req.message)
-        live_data = await run_live_tools(provider, req.message)
+        live_data, live_used = await run_live_tools(provider, req.message)
         system = build_system_prompt(hits, live_data)
         messages = [*req.history[-6:], {"role": "user", "content": req.message}]
+
+        # 실시간 API가 실제로 조회된 경우, 답변 스트림 전에 배지 정보를 먼저 보낸다.
+        if live_used:
+            yield f"data: {json.dumps({'type': 'live', 'live': live_used}, ensure_ascii=False)}\n\n"
 
         try:
             async for token in provider.stream_chat(system, messages):

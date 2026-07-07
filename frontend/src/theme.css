@@ -15,6 +15,10 @@
   --color-accent: #f59e0b;          /* 감귤색 포인트 */
   --color-source-chip: #e0f2fe;
   --color-source-chip-text: #0369a1;
+  /* 실시간 데이터 배지 — 소스 칩과 구분되는 라이브 초록 */
+  --color-live-chip: #dcfce7;
+  --color-live-chip-text: #15803d;
+  --color-live-dot: #22c55e;
 
   /* 말풍선 */
   --bubble-radius: 18px;
