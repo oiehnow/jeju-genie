@@ -57,5 +57,5 @@ jobs:
           --allow-unauthenticated
           --memory 1Gi --cpu 1
           --min-instances 0 --max-instances 2
-          --set-env-vars "GCS_BUCKET=${{ secrets.GCP_PROJECT_ID }}-mlops-quicklab,OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}"
+          --update-env-vars "GCS_BUCKET=${{ secrets.GCP_PROJECT_ID }}-mlops-quicklab"
           --project ${{ secrets.GCP_PROJECT_ID }}

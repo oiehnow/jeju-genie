@@ -34,11 +34,16 @@ class OpenAIProvider(LLMProvider):
             if model.startswith(("gpt-5", "o1", "o3", "o4"))
             else "max_tokens"
         )
+        kwargs = {token_key: settings.max_tokens}
+        # 추론 모델(gpt-5/o-계열)만 reasoning_effort 지원 — 낮게 둬서 추론이
+        # 토큰 예산을 잠식해 답변이 잘리는 현상을 막는다.
+        if token_key == "max_completion_tokens" and settings.openai_reasoning_effort:
+            kwargs["reasoning_effort"] = settings.openai_reasoning_effort
         stream = await client.chat.completions.create(
             model=model,
             messages=[{"role": "system", "content": system}, *messages],
             stream=True,
-            **{token_key: settings.max_tokens},
+            **kwargs,
         )
         async for chunk in stream:
             delta = chunk.choices[0].delta.content if chunk.choices else None

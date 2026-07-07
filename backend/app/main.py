@@ -10,6 +10,7 @@
 import json
 import logging
 import os
+from urllib.parse import quote
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -33,6 +34,15 @@ app.add_middleware(
 )
 
 _store: VectorStore | None = None
+
+
+def _source_link(url: str, title: str) -> str:
+    """출처를 클릭 가능한 링크로. 커넥터가 준 사용자용 상세 URL이 있으면 그대로,
+    없거나 내부 API 프록시 URL이면 제목으로 네이버 검색 링크를 만들어 항상 클릭되게 한다."""
+    if url and url.startswith("http") and "api/proxy" not in url:
+        return url
+    q = quote(f"제주 {title}".strip()) if title else quote("제주")
+    return f"https://search.naver.com/search.naver?query={q}"
 
 
 def store() -> VectorStore:
@@ -90,7 +100,9 @@ async def chat(req: ChatRequest):
             {
                 "title": h["metadata"].get("title", ""),
                 "source": h["metadata"].get("source", ""),
-                "url": h["metadata"].get("url", ""),
+                "url": _source_link(
+                    h["metadata"].get("url", ""), h["metadata"].get("title", "")
+                ),
             }
             for h in hits
         ]

@@ -25,7 +25,11 @@ class Settings(BaseSettings):
     openai_model: str = "gpt-4o-mini"
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "qwen3:14b"
-    max_tokens: int = 1024
+    # gpt-5 계열은 추론 토큰이 max_completion_tokens 를 함께 소모하므로 넉넉히.
+    # (1024 이면 추론에 대부분 쓰여 답변이 문장 중간에 잘림)
+    max_tokens: int = 4096
+    # gpt-5/o-계열 추론 강도. 답변형 RAG 챗은 낮게 둬야 추론 토큰 낭비/지연이 준다.
+    openai_reasoning_effort: str = "low"
 
     # ── 임베딩 ────────────────────────────────────────────
     # LLM과 독립적으로 선택. auto: OpenAI 키 있으면 openai, 없으면 ollama
