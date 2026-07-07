@@ -22,6 +22,7 @@ from app.connectors.base import discover
 from app.llm.base import get_provider
 from app.prompts import build_system_prompt
 from app.rag.store import VectorStore, pull_index_from_gcs
+from app.tools.runtime import run_live_tools
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("jeju-genie")
@@ -73,7 +74,8 @@ async def chat(req: ChatRequest):
             return
 
         hits = store().query(req.message)
-        system = build_system_prompt(hits)
+        live_data = await run_live_tools(provider, req.message)
+        system = build_system_prompt(hits, live_data)
         messages = [*req.history[-6:], {"role": "user", "content": req.message}]
 
         try:

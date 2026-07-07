@@ -35,9 +35,13 @@ def run_ingest(reset: bool = False, push: bool = False) -> dict:
             continue
         docs = conn.fetch()
         ids, texts, metas = [], [], []
+        seen: set[str] = set()
         for doc in docs:
             for j, chunk in enumerate(chunk_text(doc.text)):
                 uid = hashlib.md5(f"{doc.source}:{doc.title}:{j}:{chunk[:64]}".encode()).hexdigest()
+                if uid in seen:  # 동일 내용 중복 레코드 skip (일부 API가 같은 데이터 반복 반환)
+                    continue
+                seen.add(uid)
                 ids.append(uid)
                 texts.append(chunk)
                 metas.append(

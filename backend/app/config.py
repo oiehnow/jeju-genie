@@ -42,6 +42,12 @@ class Settings(BaseSettings):
     # ── 커넥터 키들 (★ 사용자가 나중에 제공 — 비면 해당 커넥터 skip) ──
     visitjeju_api_key: Optional[str] = None       # 제주관광공사 Visit Jeju
     data_go_kr_api_key: Optional[str] = None      # 공공데이터포털 공통 키
+    jejuits_cits_code: Optional[str] = None       # 제주교통정보센터 C-ITS (관광지/주유소/전기차 등)
+    jejuits_its_code: Optional[str] = None        # 제주교통정보센터 ITS (교통시설물/실시간교통)
+    jejudatahub_project_key: Optional[str] = None  # 제주데이터허브 projectKey (proxy 호출용)
+    opinet_api_key: Optional[str] = None          # 오피넷 유가 (실시간 조회 도구용)
+    kma_apihub_key: Optional[str] = None          # 기상청 API허브 (항공기상/낙뢰, 실시간 도구용)
+    vworld_api_key: Optional[str] = None          # VWorld 공간정보 (지오코더/검색/지도)
     seed_docs_dir: str = os.path.join(BASE_DIR, "data", "seed")
 
     # ── 배포/운영 ─────────────────────────────────────────

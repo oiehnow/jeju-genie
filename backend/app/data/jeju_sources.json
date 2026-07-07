@@ -1,0 +1,532 @@
+{
+ "jejudatahub": [
+  {
+   "name": "농산물 품종별 일일 거래 정보",
+   "apicode": "1tb1t233D16Da1b3333tttb266ba11D3"
+  },
+  {
+   "name": "농산물 품종별 일일 거래 통계",
+   "apicode": "13t6aat1at6166111Dtt1taa1ta1661t"
+  },
+  {
+   "name": "농산물 품종별 거래 이동평균",
+   "apicode": "0106aa36D6363Da1ttaatat3t3031a1a"
+  },
+  {
+   "name": "서귀포 자전거 보관소 정보",
+   "apicode": "ttaaaa2D88t2a217D9b2a1a1b1D337D1"
+  },
+  {
+   "name": "소암기념관 소장 작품 정보",
+   "apicode": "8btDbb62721a3at81aDbbt7babb78ta2"
+  },
+  {
+   "name": "일별 전기자동차 충전 이력",
+   "apicode": "btb8a6DD29t622tab1ta2t68Db1a682a"
+  },
+  {
+   "name": "요일별 전기자동차 충전 이력",
+   "apicode": "71111t11a161tb1Da611Daab2a91912a"
+  },
+  {
+   "name": "월별 전기자동차 충전 이력",
+   "apicode": "DD96616t226D16at11ta92D6DD19DttD"
+  },
+  {
+   "name": "일별 전기자동차 대기 시간",
+   "apicode": "a26229112651226a625t1b155at61bt1"
+  },
+  {
+   "name": "요일별 전기자동차 대기 시간",
+   "apicode": "2b121D21a12aD1ab92916a1a242D96t2"
+  },
+  {
+   "name": "월별 전기자동차 대기 시간",
+   "apicode": "9t212t9aata29b13aa119taa3D19a1DD"
+  },
+  {
+   "name": "제주 품종별 과수 생산량 통계",
+   "apicode": "9at8b989997tt9989tt999999a9978b9"
+  },
+  {
+   "name": "제주마 등록 현황",
+   "apicode": "7t9t99at98t8at8a7aaaaba98bt99t9t"
+  },
+  {
+   "name": "제주 친환경 농축산물 출하 정보",
+   "apicode": "7777a99bDa978t777tat9aDa77tD8t99"
+  },
+  {
+   "name": "제주 감염병 발생 통계",
+   "apicode": "bba9aab86a9tbD9989t6t8Da99t7ta86"
+  },
+  {
+   "name": "제주 대기 측정소 정보",
+   "apicode": "b5t99D7958Da9D5tt5559D985aaaDDaa"
+  },
+  {
+   "name": "제주 주유소 면세유 월평균 판매 가격 정보",
+   "apicode": "Da49tt7tttat9D8aD89DbDta999tatDt"
+  },
+  {
+   "name": "제주 주유소 연평균 판매 가격 정보",
+   "apicode": "998atattD9t733789797tDatb9btb99D"
+  },
+  {
+   "name": "제주 기상 상태별 교통사고 통계",
+   "apicode": "8tbta9b82989999727tb9t8tt288a9tt"
+  },
+  {
+   "name": "제주 노면 상태별 교통사고 통계",
+   "apicode": "tD71DD7a7a9t11abt8t7Dt1tD9D19198"
+  },
+  {
+   "name": "제주 치매 안심 센터 위치 정보",
+   "apicode": "at899998bt797a8098tttD79at97bDb7"
+  },
+  {
+   "name": "제주 새마을문고 정보",
+   "apicode": "9a88t9988a9t9t98atb98tD9979aa789"
+  },
+  {
+   "name": "제주 공공 도서관 정보",
+   "apicode": "aa9D99t7D8aD799aa9tt8aD8Dttt8aD8"
+  },
+  {
+   "name": "시도별 고등학생 사교육 참여율 정보",
+   "apicode": "9abD88tb7b8t9b97D9t8D9bttat79Daa"
+  },
+  {
+   "name": "시도별 학생 1인당 월평균 사교육비 정보",
+   "apicode": "Db9D68ta6a669DDtaaD88t67a8b98b7a"
+  },
+  {
+   "name": "시도별 실업률 정보",
+   "apicode": "a9aaaDt8at899t988D857955tattatab"
+  },
+  {
+   "name": "시도별 합계 출산율 정보",
+   "apicode": "b8Db47aDt4aa774D9Daa744Db8448Da7"
+  },
+  {
+   "name": "제주 해수욕장 수질 조사 정보",
+   "apicode": "aa7t3a3tabDtbD38a87ta8ttttt388ab"
+  },
+  {
+   "name": "제주 농어촌 체험 휴양 마을 현황",
+   "apicode": "9D89Da8a9D9bDD98ttD2ttt2b2ab8782"
+  },
+  {
+   "name": "한라산 둘레길 코스별 정보",
+   "apicode": "888tDaaDaat91181b7Db79811181tDaa"
+  },
+  {
+   "name": "시도별 문화재 지정 현황",
+   "apicode": "t9taaabtbD0tb78a0tt080tttaa9aDt0"
+  },
+  {
+   "name": "올레길 위치 정보",
+   "apicode": "1Daaa177batDba8b8t711D17D18atDa7"
+  },
+  {
+   "name": "시도별 코로나19 확진자 통계",
+   "apicode": "881baattD8ba1a6aaaDaa811188b16t8"
+  },
+  {
+   "name": "시도별 코로나19 백신 접종 통계",
+   "apicode": "b6at8at7a6ttbtat18a1a6aa6bat7871"
+  },
+  {
+   "name": "시도별 1일 평균 식용 계란 생산량 통계",
+   "apicode": "81D11t11bDDb68Da6D1ba66tDtaat8aa"
+  },
+  {
+   "name": "시도별 오리 마리 수 통계",
+   "apicode": "ba5aatb16a5a8atatb6tt6158taa1aaa"
+  },
+  {
+   "name": "생태자연도 정보",
+   "apicode": "6bttat6t84Daa1b18aat1a6DD4648Daa"
+  },
+  {
+   "name": "교통사고 다발지역 정보",
+   "apicode": "36333aD6tba8aa1D6D1aaab8D1aa6ba8"
+  },
+  {
+   "name": "전기자동차 충전소 정보",
+   "apicode": "atDab6t8218btaa122b26DDtbatD86t1"
+  },
+  {
+   "name": "약국 정보",
+   "apicode": "taD8a8t1atabta1Dtt1tta6bt16ab16a"
+  },
+  {
+   "name": "산후조리업 정보",
+   "apicode": "101tbt8tbataD8t0tD0D68tbttData6b"
+  },
+  {
+   "name": "병·의원 정보",
+   "apicode": "tbb1D1a1559at91ababaata1abtba58a"
+  },
+  {
+   "name": "경기종합지수 정보",
+   "apicode": "tD89a1at19t831at1aaaa83aD3a9a11D"
+  },
+  {
+   "name": "가축사육업 및 도축업 정보",
+   "apicode": "818a8tbta8D8Dab88ta8t88ba1tD133a"
+  },
+  {
+   "name": "관광 숙박업 정보",
+   "apicode": "ttbttaD3aaa3ta8bbtDtaDD18t37aD17"
+  },
+  {
+   "name": "축산 관련 업종 정보(통합)",
+   "apicode": "DbatDt83t3bta8t1tDt6btat1188b8bb"
+  },
+  {
+   "name": "박물관 및 미술관 위치 정보",
+   "apicode": "at2ta1D1aaa811bata88Dt1D22b1t1bt"
+  },
+  {
+   "name": "오름 위치 정보",
+   "apicode": "1Dttb1tab8tD88Dtat11111at1t1atD8"
+  },
+  {
+   "name": "캠핑 가능 장소 위치 정보",
+   "apicode": "a11801tD1bttatDttD1b0t1Dt80b011a"
+  },
+  {
+   "name": "카셰어링 업체 위치 정보(쏘카)",
+   "apicode": "tta9at0b01a0181t11bttttt9b0tt9tt"
+  },
+  {
+   "name": "카셰어링 업체 위치 정보(렌터카)",
+   "apicode": "01aDta180abt81t3ba0bt11taab88080"
+  },
+  {
+   "name": "카셰어링 업체 위치 정보(통합)",
+   "apicode": "88D0ba0a01a08D081tt8aDba21aabt28"
+  },
+  {
+   "name": "기념품 가게 위치 정보",
+   "apicode": "11D8at1abba0ttaDa8t8atta01188t81"
+  },
+  {
+   "name": "제주 공공와이파이 AP 정보",
+   "apicode": "Dtb18ta1btbD1Da1a81aaDttab6tDabb"
+  },
+  {
+   "name": "버스 일일 승객수 데이터",
+   "apicode": "617bt7b7ttb1Datab7a7ttD6tbt7611t"
+  },
+  {
+   "name": "버스 월간 요일별 승객수 데이터",
+   "apicode": "116b1DD1taa1tatD6bbD11aat6a1bat1"
+  },
+  {
+   "name": "버스 월간 시간별 승객수 데이터",
+   "apicode": "Db51taa161D6b1ta611tDtabtDtt1tbb"
+  },
+  {
+   "name": "일일 노선별 버스 이용자 정보",
+   "apicode": "1t4tbb16b4t1t11tt11tDt1ab6114a1t"
+  },
+  {
+   "name": "일일 정류소별 버스 이용자 정보",
+   "apicode": "1b1ta1a1ba6t6a1ttt3bD6b1tb1t1D3t"
+  },
+  {
+   "name": "버스 정류소 기본 정보",
+   "apicode": "DD11ab6a6t11D16baaa1a2tD26ata161"
+  },
+  {
+   "name": "버스 노선 기본 정보",
+   "apicode": "aaatD6D1atta1611at1t6a1b6at1b11a"
+  },
+  {
+   "name": "전통시장 대형마트 이용패턴, 연령대, 성별 카드 데이터",
+   "apicode": "bt1t10001baaa01ata06a1aD0011b6t1"
+  },
+  {
+   "name": "전통시장 대형마트 이용패턴별 카드 데이터",
+   "apicode": "1ab6aDaaatDa9aaaat9tbttatb00bD0a"
+  },
+  {
+   "name": "관광지 및 상업지구 요일별 카드 데이터",
+   "apicode": "868ttD1tbDb8tbt00tDtaba6t0Db1110"
+  },
+  {
+   "name": "관광지 및 상업지구 시간대별 카드 데이터",
+   "apicode": "DD7a1ta6tba70bt7tD1D1aDttDt701b7"
+  },
+  {
+   "name": "관광지 및 상업지구 연령대, 성별 카드 데이터",
+   "apicode": "6tt1tt0a6a01t616t6a0abb6606ta606"
+  },
+  {
+   "name": "관광지 및 상업지구 업종별 카드 데이터",
+   "apicode": "a0b10aat1ata50aat5tbb1at011D1060"
+  },
+  {
+   "name": "관광지 및 상업지구 이용자 유형별 카드 데이터",
+   "apicode": "61aa1D6t1ab44taD1bDb10Dt1Dt41tDD"
+  },
+  {
+   "name": "단체/개별 관광객 소비 데이터",
+   "apicode": "tDatbD61tD1tata3t3at3Dtt03D10D63"
+  },
+  {
+   "name": "외국인 관광객 테마별 카드 이용 데이터",
+   "apicode": "1aD0DD62t22t6atbDa66tbbD62200aDa"
+  },
+  {
+   "name": "외국인 관광객 업종별 카드 이용 데이터",
+   "apicode": "b6000b0ta01tDDaat00btaaat1Dtb101"
+  },
+  {
+   "name": "외국인 관광객 지역, 업종별 카드 이용 데이터",
+   "apicode": "tt1tDtaa0at16Daa0D60D06tDD0166t1"
+  },
+  {
+   "name": "내국인 관광객 테마별 카드 이용 데이터",
+   "apicode": "t5519aD915tt999tbbatab5b1tb5b9ta"
+  },
+  {
+   "name": "내국인 관광객 업종별 카드 이용데이터",
+   "apicode": "aDt9Dtat11DatDttataD88tata98D9tD"
+  },
+  {
+   "name": "내국인 관광객 지역, 업종, 성별, 연령대별 카드 이용 데이터",
+   "apicode": "5D5a577taba7tbb71at1b1bt9tatata9"
+  },
+  {
+   "name": "와이파이 사용자 이동 경로",
+   "apicode": "51tt9Daaa6atttDataaa5Dbttattttat"
+  },
+  {
+   "name": "와이파이 AP 그룹별 월간 사용량",
+   "apicode": "55ttt59tD5ta5tD1tbaDtaD5baD9D5tt"
+  },
+  {
+   "name": "와이파이 AP그룹별 일일 사용량",
+   "apicode": "1aa9D5DabtDt1at935b1tt5t1D95t5at"
+  },
+  {
+   "name": "관광지별 외국인 유입자 수",
+   "apicode": "12ta2a2t291tDbbabtbD9t1a219tbDbt"
+  },
+  {
+   "name": "관광지별 내국인 유입자 수",
+   "apicode": "bt11Daa5at1tat515DDtaa9D5aa99t11"
+  },
+  {
+   "name": "읍면동 단위 외국인 장기체류 유동인구",
+   "apicode": "1aabbD515b0t9ataDD055551D5b0t1t1"
+  },
+  {
+   "name": "읍면동 단위 외국인 단기체류 유동인구",
+   "apicode": "t18b1bttt8abaDt51b8aat85ttaa8t5b"
+  },
+  {
+   "name": "와이파이 월간 사용자수",
+   "apicode": "t8btt75tt88bt18abt1abtt1Dtta8Dtt"
+  },
+  {
+   "name": "와이파이 일일 사용자수",
+   "apicode": "tDtb1taa8aat816att6at6tba1aDtbba"
+  },
+  {
+   "name": "와이파이 월간 사용량",
+   "apicode": "Dta511585D5t5ta5ta1ta5tDtatDb1ba"
+  },
+  {
+   "name": "와이파이 일일 사용량",
+   "apicode": "a5baaaat5411tDtt844tattb45b1tat1"
+  },
+  {
+   "name": "읍면동 단위 내국인 유동인구",
+   "apicode": "Daaa1t3at3tt8a8DD3t55538t35Dab1t"
+  },
+  {
+   "name": "국가별 입도객 현황",
+   "apicode": "tbata552bat15Daa585t52D5a5t818t2"
+  },
+  {
+   "name": "방문목적별 입도객 현황",
+   "apicode": "DtaDa0555D801Da508DbDtt5t1bat1ta"
+  },
+  {
+   "name": "일별 기상 정보",
+   "apicode": "1aD5taat1attaa51Db1511b51ab9Da19"
+  },
+  {
+   "name": "기상관측소 정보",
+   "apicode": "t1bab75a555a15715btaa7a5abaa1aab"
+  },
+  {
+   "name": "읍면동별 버스 탑승자수",
+   "apicode": "bta5D55aD1bt7tD5a7a7ba1717a7a5tt"
+  },
+  {
+   "name": "읍면동별 와이파이 사용량",
+   "apicode": "7tttaDaD5ataaba75a57ttDtaDb6tb7t"
+  }
+ ],
+ "seogwipo": [
+  {
+   "name": "감귤박물관전시정보",
+   "endpoint": "http://culture.seogwipo.go.kr/citrus/show/pdata.htm?format=json"
+  },
+  {
+   "name": "감귤박물관소장전시물정보",
+   "endpoint": "http://culture.seogwipo.go.kr/citrus/show/permanent.htm?format=json"
+  },
+  {
+   "name": "감귤박물관정보",
+   "endpoint": "http://www.seogwipo.go.kr/info/news/notice.htm?format=json"
+  },
+  {
+   "name": "축제별프로그램정보",
+   "endpoint": "https://www.seogwipo.go.kr/festival/program/scheduledata.htm?act=index&format=json"
+  },
+  {
+   "name": "모범음식점정보",
+   "endpoint": "https://www.seogwipo.go.kr/openapi/goodRestaurantService/"
+  },
+  {
+   "name": "착한가격업소정보",
+   "endpoint": "https://www.seogwipo.go.kr/field/industryeconomy/niceprice/condition.htm?format=json"
+  },
+  {
+   "name": "문화예술행사정보",
+   "endpoint": "http://culture.seogwipo.go.kr/community/artday.htm?format=json"
+  },
+  {
+   "name": "공공체육시설정보",
+   "endpoint": "https://www.seogwipo.go.kr/field/living/sportsfacilities/facilities/data.htm?act=index&format=json"
+  },
+  {
+   "name": "예술의전당프로그램강좌정보",
+   "endpoint": "http://culture.seogwipo.go.kr/openapi/joinProgramService/"
+  },
+  {
+   "name": "기당미술관전시안내",
+   "endpoint": "http://culture.seogwipo.go.kr/gidang/show/current.htm?format=json"
+  },
+  {
+   "name": "기당미술관작품정보",
+   "endpoint": "https://culture.seogwipo.go.kr/gidang/collection/wxml.htm?format=json"
+  },
+  {
+   "name": "소암기념관소장작품정보",
+   "endpoint": "http://culture.seogwipo.go.kr/soam/index.php/contents/collection/wxml"
+  },
+  {
+   "name": "이중섭미술관작품정보",
+   "endpoint": "https://culture.seogwipo.go.kr/jslee/gallery/goods.htm?format=json"
+  },
+  {
+   "name": "보건소 건강 프로그램",
+   "endpoint": "https://seogwipo.go.kr/openapi/healthService/"
+  },
+  {
+   "name": "보건소현황",
+   "endpoint": "http://www.seogwipo.go.kr/group/health/seogwipo/notice.htm?format=json"
+  },
+  {
+   "name": "우리동네건강시설",
+   "endpoint": "https://seogwipo.go.kr/openapi/localSportsService/"
+  },
+  {
+   "name": "어린이건강놀이터",
+   "endpoint": "https://seogwipo.go.kr/openapi/playgroundService/"
+  },
+  {
+   "name": "평생학습관교육강좌목록",
+   "endpoint": "https://edu.seogwipo.go.kr/life/education/course.htm?format=json"
+  },
+  {
+   "name": "자기주도학습센터",
+   "endpoint": "https://edu.seogwipo.go.kr/self/education/student.htm?format=json"
+  },
+  {
+   "name": "서귀포시 경제뉴스보도자료",
+   "endpoint": "http://www.seogwipo.go.kr/openapi/sgpEconomicService/"
+  },
+  {
+   "name": "읍면동소식",
+   "endpoint": "http://www.seogwipo.go.kr/openapi/dongNewsService/"
+  },
+  {
+   "name": "우리부서공사알리미",
+   "endpoint": "https://www.seogwipo.go.kr/openapi/constructionService/"
+  },
+  {
+   "name": "서귀포뉴스(영상)",
+   "endpoint": "https://www.seogwipo.go.kr/openapi/sgpMovieNewsService/"
+  },
+  {
+   "name": "서귀포시알림마당",
+   "endpoint": "https://www.seogwipo.go.kr/openapi/sgpNoticeService/"
+  },
+  {
+   "name": "서귀포시시정뉴스",
+   "endpoint": "http://www.seogwipo.go.kr/news/seogwipo-news/sijung_news.htm?format=json"
+  },
+  {
+   "name": "행정자료실도서목록",
+   "endpoint": "http://www.seogwipo.go.kr/group/selfgoverning/budget/list.htm?format=json"
+  },
+  {
+   "name": "생활쓰레기시설안내",
+   "endpoint": "https://seogwipo.go.kr/openapi/recycleService/"
+  }
+ ],
+ "jejugokr": [
+  {
+   "name": "제주 방언사전",
+   "endpoint": "https://www.jeju.go.kr/rest/JejuDialectService/getJejuDialectServiceList"
+  },
+  {
+   "name": "제주 생활방언",
+   "endpoint": "https://www.jeju.go.kr/rest/JejuLifeDialectService/getJejuLifeDialectServiceList"
+  },
+  {
+   "name": "제주 민요",
+   "endpoint": "https://www.jeju.go.kr/rest/JejuFolksongService/getJejuFolksongList"
+  },
+  {
+   "name": "제주 역사인물",
+   "endpoint": "https://www.jeju.go.kr/rest/JejuHistoricalPersonService/getJejuHistoricalPersonList"
+  },
+  {
+   "name": "제주 속담",
+   "endpoint": "https://www.jeju.go.kr/rest/JejuAdageService/getJejuAdageServiceList"
+  },
+  {
+   "name": "제주 신화",
+   "endpoint": "http://www.jeju.go.kr/tool/openapi/jejumythservice/jejumythlist"
+  },
+  {
+   "name": "제주 전시문화행사",
+   "endpoint": "http://www.jeju.go.kr/rest/JejuExhibitionService/getJejucultureExhibitionList"
+  },
+  {
+   "name": "제주 공공도서관 프로그램",
+   "endpoint": "https://www.jeju.go.kr/api/lib/program"
+  },
+  {
+   "name": "제주 문화달력",
+   "endpoint": "https://www.jeju.go.kr/api/culture/news/calendar"
+  },
+  {
+   "name": "제주 산업지원 공고",
+   "endpoint": "http://www.jeju.go.kr/tool/openapi/JejuIndSupportETC/getJejuIndSupportETCList"
+  },
+  {
+   "name": "제주 민원서식",
+   "endpoint": "http://www.jeju.go.kr/rest/JejuMinwonService/getMinwonList"
+  }
+ ]
+}

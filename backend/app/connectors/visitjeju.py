@@ -11,6 +11,7 @@ from app.config import settings
 from app.connectors.base import BaseConnector, Document, register
 
 API_URL = "https://api.visitjeju.net/vsjApi/contents/searchList"
+MAX_PAGES = 6  # 초기 인덱스 크기 상한 (페이지당 100건)
 
 
 @register
@@ -56,7 +57,7 @@ class VisitJejuConnector(BaseConnector):
                             metadata={"contentsid": it.get("contentsid", "")},
                         )
                     )
-                if page >= int(data.get("pageCount", 1)):
+                if page >= min(int(data.get("pageCount", 1)), MAX_PAGES):
                     break
                 page += 1
         return docs
