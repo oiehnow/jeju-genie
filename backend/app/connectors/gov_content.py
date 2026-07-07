@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 
 import httpx
 
-from app.connectors._extract import load_sources, record_to_text
+from app.connectors._extract import NOISE_DATASETS, load_sources, record_to_text
 from app.connectors.base import BaseConnector, Document, register
 
 logger = logging.getLogger("jeju-genie.gov")
@@ -68,7 +68,7 @@ class GovContentConnector(BaseConnector):
         with httpx.Client(timeout=30, follow_redirects=True, verify=False) as client:
             for origin, s in targets:
                 name, ep = s.get("name", ""), s.get("endpoint", "")
-                if not ep:
+                if not ep or name in NOISE_DATASETS:
                     continue
                 got = self._fetch_one(client, ep)
                 for rec in got:

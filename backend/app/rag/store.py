@@ -24,17 +24,23 @@ class VectorStore:
         self.collection.upsert(ids=ids, documents=texts, embeddings=embeddings, metadatas=metadatas)
 
     def query(self, text: str, top_k: int | None = None) -> list[dict]:
+        from app.connectors._extract import is_noise_dataset
+
         top_k = top_k or settings.retrieval_top_k
         if self.collection.count() == 0:
             return []
         embedding = self.embedder.embed([text])[0]
-        res = self.collection.query(
-            query_embeddings=[embedding],
-            n_results=min(top_k, self.collection.count()),
-        )
+        # 넉넉한 후보를 받아 행정 공고/민원류 노이즈를 걸러낸 뒤 top_k만 취한다.
+        pool = min(self.collection.count(), max(top_k * 5, 24))
+        res = self.collection.query(query_embeddings=[embedding], n_results=pool)
         hits = []
         for doc, meta, dist in zip(res["documents"][0], res["metadatas"][0], res["distances"][0]):
-            hits.append({"text": doc, "metadata": meta or {}, "distance": dist})
+            meta = meta or {}
+            if is_noise_dataset(meta):
+                continue
+            hits.append({"text": doc, "metadata": meta, "distance": dist})
+            if len(hits) >= top_k:
+                break
         return hits
 
     def count(self) -> int:

@@ -9,6 +9,26 @@ import os
 
 _DATA = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 
+# 행정 공고/민원/보도자료류 — 관광·문화 챗봇에 무가치하고, "가는 법/신청/방법" 같은
+# 절차성 질의의 임베딩을 가로채 RAG 관련도를 망친다. 색인/검색 양쪽에서 배제한다.
+NOISE_DATASETS = {
+    "제주 민원서식",
+    "제주 산업지원 공고",
+    "서귀포시알림마당",
+    "서귀포시시정뉴스",
+    "서귀포시 경제뉴스보도자료",
+    "읍면동소식",
+    "우리부서공사알리미",
+    "서귀포뉴스(영상)",
+    "행정자료실도서목록",
+}
+
+
+def is_noise_dataset(meta: dict) -> bool:
+    """검색 결과 메타데이터가 배제 대상(행정 공고/민원류)인지."""
+    ds = meta.get("dataset") or meta.get("source", "").split(":", 1)[-1]
+    return ds in NOISE_DATASETS
+
 TITLE_KEYS = [
     "placeName", "companyName", "libraryName", "stationName", "centerName",
     "villageName", "courseName", "chargingPlace", "resto_nm", "recycle_title",
