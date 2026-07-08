@@ -12,10 +12,26 @@ export interface LiveSource {
   label: string;
 }
 
+/** 에이전트가 도구 실행을 시작할 때 오는 진행 상태 (대기 멘트 테마 전환용) */
+export interface ToolStatus {
+  tool: string;
+  label: string;
+  theme: string;
+}
+
+/** 답변에 첨부되는 지도 포인트 (map SSE 이벤트) */
+export interface MapPoint {
+  name: string;
+  lat: number;
+  lng: number;
+}
+
 export interface ChatEvents {
   onToken: (token: string) => void;
   onSources: (sources: Source[]) => void;
   onLive: (live: LiveSource[]) => void;
+  onStatus?: (status: ToolStatus) => void;
+  onMap?: (points: MapPoint[]) => void;
   onDone: () => void;
   onError: (err: unknown) => void;
 }
@@ -50,10 +66,67 @@ export async function streamChat(
         if (data.type === "token") events.onToken(data.content);
         else if (data.type === "sources") events.onSources(data.sources);
         else if (data.type === "live") events.onLive(data.live);
+        else if (data.type === "status")
+          events.onStatus?.({ tool: data.tool, label: data.label, theme: data.theme });
+        else if (data.type === "map" && Array.isArray(data.points))
+          events.onMap?.(data.points);
         else if (data.type === "done") events.onDone();
       }
     }
   } catch (err) {
     events.onError(err);
+  }
+}
+
+/* ── 보조 REST 엔드포인트 — 백엔드 미구현/실패 시 조용히 무시 ── */
+
+/** 헤더 기온 칩용 현재 날씨. 실패하면 null (칩 숨김). */
+export interface NowInfo {
+  temp: string | null;
+  summary: string;
+}
+
+export async function fetchNow(): Promise<NowInfo | null> {
+  try {
+    const resp = await fetch("/api/now");
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return { temp: data.temp ?? null, summary: data.summary ?? "" };
+  } catch {
+    return null;
+  }
+}
+
+/** 사이드바 '실시간 정보' 패널 항목. 실패하면 빈 배열. */
+export interface LiveSummaryItem {
+  label: string;
+  theme: string;
+  text: string;
+}
+
+export async function fetchLiveSummary(): Promise<LiveSummaryItem[]> {
+  try {
+    const resp = await fetch("/api/live/summary");
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    return Array.isArray(data.items) ? data.items : [];
+  } catch {
+    return [];
+  }
+}
+
+/** 답변 완료 후 후속 질문 제안. 실패/빈 응답이면 빈 배열 (칩 미표시). */
+export async function fetchSuggestions(question: string, answer: string): Promise<string[]> {
+  try {
+    const resp = await fetch("/api/suggest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, answer }),
+    });
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    return Array.isArray(data.suggestions) ? data.suggestions : [];
+  } catch {
+    return [];
   }
 }

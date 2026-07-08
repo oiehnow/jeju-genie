@@ -17,20 +17,31 @@ from abc import ABC, abstractmethod
 
 
 class BaseTool(ABC):
-    """실시간 데이터 도구 인터페이스."""
+    """실시간 데이터 도구 인터페이스.
+
+    도구는 요청마다 새 인스턴스가 만들어지며(enabled_tools), 에이전트가
+    asyncio.gather로 병렬 실행하므로 run은 반드시 async여야 한다.
+    """
 
     name: str = "base"
     label: str = ""  # UI '실시간 데이터' 배지에 표시할 짧은 한국어 이름 (비면 name 사용)
+    # 프론트 대기 멘트 테마 (weather/fuel/traffic/place/stats/flight/ev/dialect/knowledge/generic)
+    theme: str = "generic"
     description: str = ""
     # OpenAI function-calling parameters 스키마 (JSON Schema)
     parameters: dict = {"type": "object", "properties": {}}
+
+    def __init__(self):
+        # 요청 스코프 수집기 — run() 중에 채우면 에이전트가 회수해 SSE로 내보낸다.
+        self.refs: list[dict] = []        # {"title": str, "url": str} — 출처 칩 후보
+        self.map_points: list[dict] = []  # {"name": str, "lat": float, "lng": float} — 지도 마커
 
     @abstractmethod
     def enabled(self) -> bool:
         """키/설정 준비 여부. False면 LLM 함수 목록에서 제외."""
 
     @abstractmethod
-    def run(self, **kwargs) -> str:
+    async def run(self, **kwargs) -> str:
         """도구 실행 → LLM 컨텍스트에 넣을 텍스트(요약된 결과) 반환."""
 
     def openai_schema(self) -> dict:

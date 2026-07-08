@@ -8,6 +8,8 @@ from typing import AsyncIterator
 
 class LLMProvider(ABC):
     name: str = "base"
+    # 함수호출(tool-calling) 지원 여부 — True면 에이전트 루프, False면 단순 RAG 스트리밍.
+    supports_tools: bool = False
 
     @abstractmethod
     async def stream_chat(self, system: str, messages: list[dict]) -> AsyncIterator[str]:
@@ -19,15 +21,6 @@ class LLMProvider(ABC):
     @abstractmethod
     async def available(self) -> bool:
         """프로바이더 사용 가능 여부 (키 존재/서버 살아있음)."""
-
-    async def decide_tool_calls(
-        self, message: str, tool_schemas: list[dict]
-    ) -> list[tuple[str, dict]]:
-        """사용자 질문에 필요한 실시간 도구를 LLM 함수호출로 선택.
-
-        반환: [(도구이름, 인자dict), ...]. 함수호출 미지원 프로바이더는 빈 리스트.
-        """
-        return []
 
 
 def get_provider():

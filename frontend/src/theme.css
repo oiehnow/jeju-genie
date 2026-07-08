@@ -1,36 +1,72 @@
 /* ─────────────────────────────────────────────────────────────
-   제주 지니 디자인 토큰 — UI 시안이 오면 이 파일 값만 교체하세요.
+   제주 지니 디자인 토큰 — "Jeju breeze & stone-wall minimal"
+   팔레트: Ocean Teal / Sea Breeze / Ivory / Basalt Gray / Tangerine
    말풍선/배경/폰트/마스코트 크기가 전부 여기서 제어됩니다.
    ───────────────────────────────────────────────────────────── */
 :root {
-  /* 브랜드 색 — 헤더는 제주 바다-초록의 부드러운 그라데이션 (눈 편한 톤) */
-  --color-bg: #f4f9fb;
-  --header-gradient: linear-gradient(120deg, #5fb0d4 0%, #6ec6b4 60%, #8fd3a8 100%);
+  /* 팔레트 원색 */
+  --color-teal: #0fa3a3;            /* Ocean Teal — 주요 버튼/포인트 */
+  --color-teal-deep: #0b8484;       /* teal hover/진한 톤 */
+  --color-breeze: #6ec7c2;          /* Sea Breeze — 보조 */
+  --color-ivory: #faf8f4;           /* Ivory — 배경 */
+  --color-basalt: #4a4f52;          /* Basalt Gray — 텍스트/다크 요소 */
+  --color-tangerine: #ff8a3d;       /* Tangerine — 악센트 */
+
+  /* 표면/배경 */
+  --color-bg: var(--color-ivory);
+  --color-surface: #ffffff;
+  --color-surface-soft: #f2f7f6;    /* 연한 바다빛 표면 */
+  --color-border: #e6e2da;          /* 돌담 느낌의 연한 테두리 */
+  --chat-gradient: linear-gradient(165deg, #f4faf9 0%, #faf8f4 45%, #f1f6f5 100%);
+
+  /* 헤더 */
+  --header-gradient: linear-gradient(120deg, #0fa3a3 0%, #3db5b0 55%, #6ec7c2 100%);
   --color-header-text: #ffffff;
-  --header-title-size: 2.3rem;
+  --header-title-size: 1.55rem;
+
+  /* 말풍선 색 */
   --color-genie-bubble: #ffffff;
-  --color-genie-text: #1e293b;
-  --color-user-bubble: #0ea5e9;
+  --color-genie-text: var(--color-basalt);
+  --color-user-bubble: var(--color-teal);
   --color-user-text: #ffffff;
-  --color-accent: #f59e0b;          /* 감귤색 포인트 */
-  --color-source-chip: #e0f2fe;
-  --color-source-chip-text: #0369a1;
+  --color-accent: var(--color-tangerine);
+  --color-source-chip: #e2f2f1;
+  --color-source-chip-text: #0b7b7b;
+
   /* 실시간 데이터 배지 — 소스 칩과 구분되는 라이브 초록 */
   --color-live-chip: #dcfce7;
   --color-live-chip-text: #15803d;
   --color-live-dot: #22c55e;
 
+  /* 대기 인디케이터 (답변 준비 중 멘트 + 진행 라벨 + 점 애니메이션) */
+  --color-waiting-text: #7b8287;
+  --color-waiting-label: #0b7b7b;
+  --color-waiting-dot: #a8b2b1;
+
+  /* 지니 답변 마크다운 요소 */
+  --color-md-link: #0b7b7b;
+  --color-md-code-bg: #f1f4f3;
+  --color-md-table-border: #e0e6e4;
+  --color-md-table-head: #eef5f4;
+
   /* 말풍선 */
-  --bubble-radius: 18px;
-  --bubble-shadow: 0 2px 8px rgba(14, 116, 144, 0.08);
+  --bubble-radius: 20px;
+  --bubble-shadow: 0 2px 10px rgba(74, 79, 82, 0.07);
+
+  /* 카드/사이드바 */
+  --card-radius: 24px;
+  --card-shadow: 0 6px 24px rgba(15, 163, 163, 0.08);
+  --sidebar-width: 264px;
 
   /* 마스코트 */
-  --mascot-size: 88px;              /* 헤더 원형 액자 */
+  --mascot-size: 52px;              /* 헤더 원형 액자 */
   --mascot-bg: #ffffff;
-  --floating-mascot-width: 600px;   /* 채팅 좌측 플로팅 마스코트 (기존 200px의 3배) */
+  --floating-mascot-width: 210px;   /* 채팅 카드 우하단 플로팅 마스코트 */
+  --avatar-size: 36px;              /* 지니 말풍선 옆 아바타 */
 
   /* 타이포 */
-  --font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-family: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo",
+    "Malgun Gothic", sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,4 +74,5 @@
 body {
   font-family: var(--font-family);
   background: var(--color-bg);
+  color: var(--color-basalt);
 }

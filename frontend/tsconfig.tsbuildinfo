@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/vite-env.d.ts","./src/components/floatingmascot.tsx","./src/components/mascotslot.tsx","./src/components/messagebubble.tsx"],"version":"5.9.3"}
+{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/vite-env.d.ts","./src/waitingmessages.ts","./src/components/floatingmascot.tsx","./src/components/mapcard.tsx","./src/components/mascotslot.tsx","./src/components/messagebubble.tsx","./src/components/sidebar.tsx","./src/components/waitingindicator.tsx"],"version":"5.9.3"}

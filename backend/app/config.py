@@ -30,6 +30,10 @@ class Settings(BaseSettings):
     max_tokens: int = 4096
     # gpt-5/o-계열 추론 강도. 답변형 RAG 챗은 낮게 둬야 추론 토큰 낭비/지연이 준다.
     openai_reasoning_effort: str = "low"
+    # 에이전트 루프 최대 도구 라운드 수 — 초과 시 도구 없이 마지막 답변을 강제한다.
+    agent_max_rounds: int = 3
+    # 후속 질문 제안(/api/suggest)용 경량 모델 — 본 답변 모델과 분리해 비용/지연 절감.
+    openai_suggest_model: str = "gpt-5-mini"
 
     # ── 임베딩 ────────────────────────────────────────────
     # LLM과 독립적으로 선택. auto: OpenAI 키 있으면 openai, 없으면 ollama
