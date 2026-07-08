@@ -55,8 +55,7 @@ export default function DensityMap({ onClose }: { onClose: () => void }) {
           <div>
             <p className="density-title">외국인 관광객 밀집 지도</p>
             <p className="density-asof">
-              {/* asof는 "2026-04 기준" 형태로 옴 — '기준'을 덧붙이지 않는다 */}
-              {data?.asof ? `${data.asof} · 외국 카드 사용 내역 기반` : "외국 카드 사용 내역 기반"}
+              실시간 업데이트 api 기준 · 외국 카드 사용 내역 기반
             </p>
           </div>
           <div className="density-actions">
