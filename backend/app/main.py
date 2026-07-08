@@ -4,6 +4,9 @@
 - POST /api/chat        : 에이전트 챗 (SSE 스트리밍: status/live/token/map/sources/done 이벤트)
 - GET  /api/now         : 헤더 기온 칩 (제주공항 METAR 기온, 10분 캐시)
 - GET  /api/live/summary: 사이드바 실시간 패널 (날씨/유가/교통 병렬 조회, 5분 캐시)
+- GET  /api/news        : 오늘의 제주 뉴스 상위 4건 (구글 뉴스 RSS, 30분 캐시) — live_api.py
+- GET  /api/live/detail : 카테고리별 실시간 상세 (5분 캐시, refresh=1) — live_api.py
+- GET  /api/live/density: 외국인 관광객 밀집 지역 상위 12곳 (30분 캐시) — live_api.py
 - POST /api/suggest     : 문답 기반 후속 질문 3개 제안 (경량 LLM)
 - POST /api/ingest      : 인덱스 (재)구축
 - GET  /api/sources     : 등록된 커넥터와 활성 상태 (플랫폼 대시보드용)
@@ -26,6 +29,7 @@ from pydantic import BaseModel
 from app.agent import run_agent
 from app.config import settings
 from app.connectors.base import discover
+from app.live_api import router as live_router
 from app.llm.base import get_provider
 from app.rag.store import VectorStore, pull_index_from_gcs
 
@@ -36,6 +40,7 @@ app = FastAPI(title="제주 지니", version="0.1.0")
 app.add_middleware(
     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
 )
+app.include_router(live_router)  # /api/news, /api/live/detail, /api/live/density
 
 _store: VectorStore | None = None
 

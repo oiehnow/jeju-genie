@@ -8,6 +8,7 @@
  * 이미지를 모두 렌더하고 opacity만 토글해 전환 시 로딩 깜빡임을 없앤다.
  * 위아래 float 애니메이션은 항상 유지, thinking/answering 에서는 빨라진다.
  */
+import "../mascot.css";
 import mascotIdle from "../assets/mascot_1.png";
 import mascotThink from "../assets/mascot_think.png";
 import mascotAnswer from "../assets/mascot_answer.png";

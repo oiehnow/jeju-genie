@@ -70,6 +70,116 @@
   cursor: default;
 }
 
+/* 실시간 정보 서브메뉴 (유가/날씨/교통/밀집) */
+.side-submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 14px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+}
+.side-subrow {
+  display: flex;
+  gap: 6px;
+}
+.side-subitem {
+  flex: 1;
+  text-align: center;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-basalt);
+  font-family: var(--font-family);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.side-subitem:hover {
+  background: var(--color-source-chip);
+  color: var(--color-source-chip-text);
+  border-color: var(--color-breeze);
+}
+.side-subitem.active {
+  background: var(--color-teal);
+  border-color: var(--color-teal);
+  color: #fff;
+}
+.side-subitem.wide { flex: none; width: 100%; }
+
+/* 패널 새로고침 버튼 + 스피너 (실시간 상세 / 밀집 지도 공용) */
+.panel-refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 24px;
+  padding: 3px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-teal-deep);
+  font-family: var(--font-family);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.panel-refresh:hover:not(:disabled) { background: var(--color-source-chip); }
+.panel-refresh:disabled { opacity: 0.6; cursor: default; }
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-teal);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 추천 코스 서브패널 (카드 6종) */
+.course-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 14px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+}
+.course-card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.course-card:hover:not(:disabled) {
+  background: var(--color-source-chip);
+  border-color: var(--color-teal);
+}
+.course-card:disabled { opacity: 0.55; cursor: default; }
+.course-card-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--color-basalt);
+}
+.course-card-desc {
+  font-size: 0.73rem;
+  color: var(--color-waiting-text);
+  line-height: 1.4;
+}
+
 /* 실시간 정보 패널 */
 .live-panel {
   display: flex;
@@ -79,6 +189,17 @@
   border-radius: 14px;
   background: var(--color-surface-soft);
   border: 1px solid var(--color-border);
+}
+.live-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.live-panel-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-teal-deep);
 }
 .live-panel-note {
   font-size: 0.8rem;
@@ -100,30 +221,160 @@
   line-height: 1.45;
 }
 
-/* 오늘의 제주 한 컷 카드 */
+/* 오늘의 제주 뉴스 카드 */
 .jeju-card {
   padding: 14px;
   border-radius: 18px;
   background: linear-gradient(160deg, #e9f6f4 0%, #f6f1e8 100%);
   border: 1px solid var(--color-border);
-  text-align: center;
-}
-.jeju-card img {
-  width: 100%;
-  border-radius: 12px;
-  display: block;
-  margin-bottom: 10px;
 }
 .jeju-card-title {
   font-size: 0.82rem;
   font-weight: 700;
   color: var(--color-teal-deep);
-  margin-bottom: 4px;
 }
-.jeju-card-text {
+.news-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.news-head img {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+}
+.news-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.news-list a {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-decoration: none;
+}
+.news-item-title {
   font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-basalt);
+  line-height: 1.4;
+}
+.news-list a:hover .news-item-title {
+  color: var(--color-teal-deep);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.news-item-source {
+  font-size: 0.68rem;
   color: var(--color-waiting-text);
-  line-height: 1.5;
+}
+
+/* 외국인 관광객 밀집 지도 — 메인 영역 위 오버레이 카드 */
+.density-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;              /* 모바일 사이드바(50)보다 위 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.density-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(37, 42, 44, 0.45);
+}
+.density-card {
+  position: relative;
+  width: min(720px, 100%);
+  max-height: calc(100dvh - 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  border-radius: var(--card-radius);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+.density-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.density-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-basalt);
+}
+.density-asof {
+  font-size: 0.74rem;
+  color: var(--color-waiting-text);
+  margin-top: 2px;
+}
+.density-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.density-close {
+  padding: 4px 12px;
+  min-height: 24px;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-basalt);
+  color: #fff;
+  font-family: var(--font-family);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.density-close:hover { background: #363b3e; }
+.density-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-waiting-text);
+}
+.density-legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: -1px;
+}
+.density-map {
+  position: relative;
+  height: min(420px, 55dvh);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+.density-map .leaflet-container {
+  font-family: var(--font-family);
+  z-index: 0;
+}
+.density-map-note {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 0.84rem;
+  color: var(--color-waiting-text);
+  pointer-events: none;
 }
 
 /* 모바일 오버레이 백드롭 */
@@ -623,4 +874,7 @@
   .bubble { max-width: 82%; }
   .floating-mascot { width: 110px; right: 10px; bottom: 6px; opacity: 0.92; }
   .chat-scroll { padding: 16px 12px 22px; }
+  .density-overlay { padding: 10px; }
+  .density-card { padding: 12px; max-height: calc(100dvh - 20px); }
+  .density-map { height: min(360px, 52dvh); }
 }

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import "../mapcard.css";
 import type { MapPoint } from "../api";
 
 const pinIcon = L.divIcon({
@@ -27,7 +28,8 @@ function FitToPoints({ points }: { points: MapPoint[] }) {
       map.setView([points[0].lat, points[0].lng], 13);
     } else {
       const bounds = L.latLngBounds(points.map((p) => [p.lat, p.lng] as [number, number]));
-      map.fitBounds(bounds, { padding: [28, 28] });
+      /* 포인트가 많아도 핀이 가장자리에 붙지 않게 패딩 넉넉히, 과도한 줌인 방지 */
+      map.fitBounds(bounds, { padding: [48, 48], maxZoom: 14 });
     }
   }, [map, points]);
   return null;
@@ -36,24 +38,31 @@ function FitToPoints({ points }: { points: MapPoint[] }) {
 export default function MapCard({ points }: { points: MapPoint[] }) {
   if (points.length === 0) return null;
   return (
-    <div className="map-card">
-      <MapContainer
-        center={[points[0].lat, points[0].lng]}
-        zoom={12}
-        scrollWheelZoom={false}
-        style={{ height: "100%", width: "100%" }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {points.map((p, i) => (
-          <Marker key={`${p.name}-${i}`} position={[p.lat, p.lng]} icon={pinIcon}>
-            <Popup>{p.name}</Popup>
-          </Marker>
-        ))}
-        <FitToPoints points={points} />
-      </MapContainer>
+    <div className="map-embed">
+      <div className="map-embed-header">
+        <span className="map-embed-pin" aria-hidden="true" />
+        <span className="map-embed-title">지도로 보기</span>
+        <span className="map-embed-count">{points.length}곳</span>
+      </div>
+      <div className="map-embed-body">
+        <MapContainer
+          center={[points[0].lat, points[0].lng]}
+          zoom={12}
+          scrollWheelZoom={false}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {points.map((p, i) => (
+            <Marker key={`${p.name}-${i}`} position={[p.lat, p.lng]} icon={pinIcon}>
+              <Popup>{p.name}</Popup>
+            </Marker>
+          ))}
+          <FitToPoints points={points} />
+        </MapContainer>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,131 @@
+/* ─────────────────────────────────────────────────────────────
+   답변 말풍선 안 지도 카드 — MapCard.tsx 전용.
+   app.css의 구 .map-card 규칙 대신 .map-embed 네임스페이스를 새로
+   써서 전역 파일을 건드리지 않고 스타일을 완결한다.
+   구성: 헤더 바("지도로 보기 — N곳") + 280px 지도 본문.
+   ───────────────────────────────────────────────────────────── */
+
+.map-embed {
+  margin-top: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: 0 4px 14px rgba(15, 163, 163, 0.12);
+}
+
+/* 지도가 포함된 지니 말풍선은 지도가 답답하지 않게 살짝 넓힌다 */
+.bubble.genie:has(.map-embed) {
+  max-width: min(86%, 680px);
+  width: 100%;
+}
+
+/* ── 헤더 바 ── */
+.map-embed-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: linear-gradient(120deg, #e2f2f1 0%, #eef7f4 100%);
+  border-bottom: 1px solid var(--color-border);
+}
+/* 작은 teal 핀 모양 장식 (이미지/이모지 없이 CSS로) */
+.map-embed-pin {
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  background: var(--color-teal);
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.map-embed-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-teal-deep);
+  letter-spacing: 0.2px;
+}
+.map-embed-count {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-breeze);
+  color: var(--color-teal-deep);
+  white-space: nowrap;
+}
+
+/* ── 지도 본문 ── */
+.map-embed-body {
+  height: 280px;
+}
+.map-embed-body .leaflet-container {
+  height: 100%;
+  width: 100%;
+  font-family: var(--font-family);
+  z-index: 0;               /* 팝업/컨트롤이 채팅 UI 위로 튀지 않게 */
+}
+
+/* divIcon 마커 — teal 물방울 핀 (app.css의 기본 규칙을 다듬어 오버라이드) */
+.map-embed-body .map-pin-anchor {
+  background: none;
+  border: none;
+}
+.map-embed-body .map-pin {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: var(--color-teal);
+  border: 2.5px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+/* 핀 안쪽 흰 점 — 지도 위에서 또렷하게 */
+.map-embed-body .map-pin::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* ── 마커 팝업 정돈 ── */
+.map-embed-body .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(37, 42, 44, 0.2);
+}
+.map-embed-body .leaflet-popup-content {
+  margin: 9px 14px;
+  font-family: var(--font-family);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-basalt);
+  line-height: 1.4;
+}
+.map-embed-body .leaflet-popup-tip {
+  box-shadow: 0 3px 10px rgba(37, 42, 44, 0.15);
+}
+.map-embed-body a.leaflet-popup-close-button {
+  color: var(--color-waiting-text);
+}
+.map-embed-body a.leaflet-popup-close-button:hover {
+  color: var(--color-teal-deep);
+}
+
+/* 모바일: 지도 높이 살짝 축소 */
+@media (max-width: 640px) {
+  .map-embed-body {
+    height: 230px;
+  }
+  .bubble.genie:has(.map-embed) {
+    max-width: 92%;
+  }
+}

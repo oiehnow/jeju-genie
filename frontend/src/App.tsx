@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import {
-  fetchLiveSummary,
   fetchNow,
   fetchSuggestions,
   streamChat,
   type LiveSource,
-  type LiveSummaryItem,
   type MapPoint,
   type NowInfo,
   type Source,
   type ToolStatus,
 } from "./api";
+import DensityMap from "./components/DensityMap";
 import FloatingMascot, { type MascotState } from "./components/FloatingMascot";
 import MascotSlot from "./components/MascotSlot";
 import MessageBubble, { type Message } from "./components/MessageBubble";
@@ -29,8 +28,6 @@ const SUGGESTIONS = [
   "2박 3일 일정 추천해줘",
   "겨울에 제주 가면 뭐 볼까?",
 ];
-
-const PRESET_COURSE = "제주 2박 3일 추천 코스 짜줘";
 
 /** 제주 밖 질문 거절 답변 휴리스틱 — sorry 마스코트 표시 여부 */
 function isSorryAnswer(answer: string): boolean {
@@ -61,9 +58,7 @@ export default function App() {
   const [followUps, setFollowUps] = useState<string[]>([]);
   const [now, setNow] = useState<NowInfo | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [liveOpen, setLiveOpen] = useState(false);
-  const [liveLoading, setLiveLoading] = useState(false);
-  const [liveItems, setLiveItems] = useState<LiveSummaryItem[]>([]);
+  const [densityOpen, setDensityOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   /** 후속 질문 요청 유효성 — 새 질문/새 대화가 시작되면 이전 요청 결과를 버린다 */
   const suggestReqRef = useRef(0);
@@ -89,18 +84,6 @@ export default function App() {
     setFollowUps([]);
     setMessages([makeWelcome()]);
     setMascotState("idle");
-  }
-
-  function toggleLive() {
-    const opening = !liveOpen;
-    setLiveOpen(opening);
-    if (opening) {
-      setLiveLoading(true);
-      fetchLiveSummary().then((items) => {
-        setLiveItems(items);
-        setLiveLoading(false);
-      });
-    }
   }
 
   async function send(text: string) {
@@ -185,16 +168,14 @@ export default function App() {
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         onNewChat={newChat}
-        onPresetCourse={() => send(PRESET_COURSE)}
+        onSend={send}
         busy={busy}
-        liveOpen={liveOpen}
-        liveLoading={liveLoading}
-        liveItems={liveItems}
-        onToggleLive={toggleLive}
+        onOpenDensity={() => setDensityOpen(true)}
       />
       {sidebarOpen && (
         <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
       )}
+      {densityOpen && <DensityMap onClose={() => setDensityOpen(false)} />}
 
       <div className="main">
         <header className="header">
