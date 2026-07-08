@@ -221,6 +221,79 @@
   line-height: 1.45;
 }
 
+/* 실시간 상세 항목의 링크 목록 (최저가 주유소 → 카카오맵 검색) */
+.live-panel-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+.live-panel-links a {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-teal-deep);
+  text-decoration: none;
+  line-height: 1.45;
+}
+.live-panel-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* 대화 기록 목록 (제목 + 날짜, 삭제 버튼) */
+.history-row {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+}
+.history-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.history-item:hover:not(:disabled) {
+  background: var(--color-source-chip);
+  border-color: var(--color-teal);
+}
+.history-item:disabled { opacity: 0.55; cursor: default; }
+.history-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-basalt);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.history-date {
+  font-size: 0.68rem;
+  color: var(--color-waiting-text);
+}
+.history-delete {
+  width: 26px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-waiting-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.history-delete:hover {
+  background: #fdecec;
+  color: #c0392b;
+}
+
 /* 오늘의 제주 뉴스 카드 */
 .jeju-card {
   padding: 14px;
@@ -483,32 +556,7 @@
   gap: 14px;
 }
 
-/* 채팅 카드 우하단 플로팅 마스코트 — 챗 상태(idle/thinking/answering)별 포즈 전환 */
-.floating-mascot {
-  position: absolute;
-  right: 16px;
-  bottom: 10px;
-  width: var(--floating-mascot-width);
-  aspect-ratio: 2400 / 1309;          /* 마스코트 원본 비율 */
-  pointer-events: none;
-  animation: floatUpDown 3s ease-in-out infinite;
-}
-.floating-mascot.talking { animation-duration: 1.4s; }
-/* 상태별 이미지 3장을 겹쳐 두고 opacity만 토글 (전환 깜빡임 방지) */
-.floating-mascot img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  border-radius: 14px;
-  box-shadow: var(--bubble-shadow);
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-.floating-mascot img.active { opacity: 1; }
-@keyframes floatUpDown {
-  0%, 100% { transform: translateY(-5px); }
-  50% { transform: translateY(5px); }
-}
+/* (마스코트는 사이드바로 이동 — 스타일은 mascot.css 의 .sidebar-mascot) */
 
 /* ── 날짜 구분선 ── */
 .date-divider {
@@ -844,9 +892,6 @@
 }
 
 /* ── 반응형 ── */
-@media (max-width: 1100px) {
-  .floating-mascot { width: 150px; }
-}
 
 /* 모바일: 사이드바는 햄버거로 여는 오버레이 */
 @media (max-width: 900px) {
@@ -872,7 +917,6 @@
   .header-sub { display: none; }
   .temp-chip { font-size: 0.8rem; padding: 6px 10px; }
   .bubble { max-width: 82%; }
-  .floating-mascot { width: 110px; right: 10px; bottom: 6px; opacity: 0.92; }
   .chat-scroll { padding: 16px 12px 22px; }
   .density-overlay { padding: 10px; }
   .density-card { padding: 12px; max-height: calc(100dvh - 20px); }

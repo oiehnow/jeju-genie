@@ -139,16 +139,60 @@ def patch_detail_tools(monkeypatch, category, *tools):
     monkeypatch.setattr(api, "_DETAIL_TOOLS", mapping)
 
 
-def test_상세_fuel은_두_도구_결과를_함께_반환(monkeypatch):
+def patch_station_item(monkeypatch, item):
+    """fuel 카테고리에 덧붙는 최저가 주유소 링크 항목을 고정값으로 교체."""
+
+    async def _fake():
+        return item
+
+    monkeypatch.setattr(api, "_fuel_station_item", _fake)
+
+
+def test_상세_fuel은_유가_도구와_주유소_링크를_함께_반환(monkeypatch):
     patch_detail_tools(monkeypatch, "fuel",
-                       FakeTool("제주 유가", "휘발유: 1743원/L"),
-                       FakeTool("제주 주유소 가격", "성신주유소 1695원/L"))
+                       FakeTool("제주 유가", "휘발유: 1743원/L"))
+    station = {"label": "제주시 휘발유 최저가 주유소 TOP 7", "text": "",
+               "links": [{"label": "성신주유소 · 1695원/L",
+                          "url": "https://map.kakao.com/?q=x", "desc": "제주시"}]}
+    patch_station_item(monkeypatch, station)
     out = run(api.live_detail(category="fuel"))
     assert out["category"] == "fuel"
     assert out["items"] == [
         {"label": "제주 유가", "text": "휘발유: 1743원/L"},
-        {"label": "제주 주유소 가격", "text": "성신주유소 1695원/L"},
+        station,
     ]
+
+
+def test_상세_fuel_주유소_조회실패시_링크항목_제외(monkeypatch):
+    patch_detail_tools(monkeypatch, "fuel",
+                       FakeTool("제주 유가", "휘발유: 1743원/L"))
+    patch_station_item(monkeypatch, None)
+    out = run(api.live_detail(category="fuel"))
+    assert [it["label"] for it in out["items"]] == ["제주 유가"]
+
+
+def test_주유소_링크항목_생성_이름_가격_카카오맵링크(monkeypatch):
+    monkeypatch.setattr(api.settings, "opinet_api_key", "ok", raising=False)
+    rows = [
+        {"OS_NM": "용담주유소", "PRICE": 1895, "NEW_ADR": "제주시 용담로 136"},
+        {"OS_NM": "", "PRICE": 1, "NEW_ADR": "무시"},         # 이름 없음 → 제외
+        {"OS_NM": "오라주유소", "PRICE": 1897, "VAN_ADR": "제주시 오라이동"},
+    ]
+    patch_get(monkeypatch, FakeResponse(json_data={"RESULT": {"OIL": rows}}))
+    item = run(api._fuel_station_item())
+    assert item["label"] == "제주시 휘발유 최저가 주유소 TOP 7"
+    links = item["links"]
+    assert len(links) == 2
+    assert links[0]["label"] == "용담주유소 · 1895원/L"
+    assert links[0]["url"].startswith("https://map.kakao.com/?q=")
+    assert "%EC%9A%A9%EB%8B%B4" in links[0]["url"]  # '용담' URL 인코딩 확인
+    assert links[1]["desc"] == "제주시 오라이동"
+
+
+def test_주유소_링크항목_네트워크오류시_None(monkeypatch):
+    monkeypatch.setattr(api.settings, "opinet_api_key", "ok", raising=False)
+    patch_get_error(monkeypatch)
+    assert run(api._fuel_station_item()) is None
 
 
 def test_상세_실패항목은_제외되고_빈items_허용(monkeypatch):
@@ -187,6 +231,7 @@ def test_상세_5분캐시와_refresh_무시(monkeypatch):
 def test_상세_카테고리별_캐시는_분리(monkeypatch):
     patch_detail_tools(monkeypatch, "fuel", FakeTool("유가", "유가 결과"))
     patch_detail_tools(monkeypatch, "traffic", FakeTool("교통", "교통 결과"))
+    patch_station_item(monkeypatch, None)
     # patch_detail_tools 는 매핑을 통째로 바꾸므로 fuel 을 다시 세팅
     mapping = dict(api._DETAIL_TOOLS)
     mapping["fuel"] = ((lambda: FakeTool("유가", "유가 결과")),)
@@ -280,20 +325,46 @@ def test_밀집_30분캐시(monkeypatch):
     assert first == second
 
 
-def test_밀집_키없으면_빈응답(monkeypatch):
+def test_밀집_키없으면_폴백스냅샷(monkeypatch):
     monkeypatch.setattr(api.settings, "jejudatahub_project_key", None, raising=False)
-    assert run(api.live_density()) == {"asof": None, "points": []}
+    assert run(api.live_density()) == api._DENSITY_FALLBACK
 
 
-def test_밀집_전체달_비면_빈응답_캐시안함(monkeypatch):
+def test_밀집_전체달_비면_폴백_그리고_캐시안함(monkeypatch):
     setup_density(monkeypatch, months=("202606", "202605"))
     calls = patch_get(monkeypatch, FakeResponse(json_data={"data": []}))
-    assert run(api.live_density()) == {"asof": None, "points": []}
+    assert run(api.live_density()) == api._DENSITY_FALLBACK
     run(api.live_density())
-    assert len(calls) == 4  # 2개월 x 2회 — 빈 결과는 캐시하지 않음
+    assert len(calls) == 4  # 2개월 x 2회 — 폴백 응답은 캐시하지 않음
 
 
-def test_밀집_네트워크오류시_빈응답(monkeypatch):
+def test_밀집_네트워크오류시_폴백스냅샷(monkeypatch):
     setup_density(monkeypatch)
     patch_get_error(monkeypatch)
-    assert run(api.live_density()) == {"asof": None, "points": []}
+    assert run(api.live_density()) == api._DENSITY_FALLBACK
+
+
+def test_밀집_비JSON응답_달은_건너뛰고_다음달_시도(monkeypatch):
+    """Cloud Run 실측 사례: 데이터허브가 HTML 오류 페이지를 반환 — 다음 달로 폴백."""
+    setup_density(monkeypatch, months=("202606", "202605"))
+    rows = [_density_row("연동", 100)]
+
+    async def _fake(url, params=None):
+        if params["startDate"] == "202606":
+            return FakeResponse(text="<html>error</html>")  # json() -> ValueError
+        return FakeResponse(json_data={"data": rows})
+
+    monkeypatch.setattr(api, "_get", _fake)
+    out = run(api.live_density())
+    assert out["asof"] == "2026-05 기준"
+    assert out["points"][0]["name"] == "연동"
+
+
+def test_밀집_폴백스냅샷_형식_검증():
+    """폴백 데이터 자체의 무결성 — 좌표표 존재, level 1~3, 값 내림차순."""
+    pts = api._DENSITY_FALLBACK["points"]
+    assert len(pts) == 12
+    assert all(p["name"] in api._EMD_COORDS for p in pts)
+    assert sorted({p["level"] for p in pts}) == [1, 2, 3]
+    values = [p["value"] for p in pts]
+    assert values == sorted(values, reverse=True)

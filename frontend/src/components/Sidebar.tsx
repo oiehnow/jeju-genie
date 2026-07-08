@@ -1,10 +1,12 @@
 /**
  * 좌측 사이드바 — 둥근 카드형 메뉴 (데스크톱 상시 / 모바일 오버레이).
- *  - 새 대화
+ *  - 새 대화 / 대화 기록 (localStorage에 보관된 과거 대화 복원)
  *  - 추천 코스: 코스 카드 6종 서브패널 → 클릭 시 프리셋 질문을 채팅으로 전송
  *  - 실시간 정보: 유가/날씨/교통 상세 패널(/api/live/detail, 새로고침 지원)
- *    + 외국인 관광객 밀집(메인 영역 오버레이 지도)
+ *    유가는 최저가 주유소 상위 7곳을 지도 링크로 제공
+ *    + 실시간 외국인 관광객 밀집(메인 영역 오버레이 지도)
  *  - 즐겨찾기 · 로그인은 데모용 비활성 장식
+ *  - 로그인 메뉴와 뉴스 카드 사이: 챗 상태별 포즈 마스코트
  *  - 하단 "오늘의 제주 뉴스" 카드 (/api/news, 실패 시 숨김)
  */
 import { useEffect, useRef, useState } from "react";
@@ -15,7 +17,9 @@ import {
   type LiveDetailItem,
   type NewsItem,
 } from "../api";
+import type { ChatRecord } from "../App";
 import mascot2 from "../assets/mascot_2.png";
+import FloatingMascot, { type MascotState } from "./FloatingMascot";
 
 interface Props {
   open: boolean;
@@ -24,8 +28,14 @@ interface Props {
   /** 코스 카드 클릭 시 프리셋 질문을 채팅으로 전송 */
   onSend: (text: string) => void;
   busy: boolean;
-  /** 외국인 관광객 밀집 지도 오버레이 열기 */
+  /** 실시간 외국인 관광객 밀집 지도 오버레이 열기 */
   onOpenDensity: () => void;
+  /** 챗 상태별 마스코트 포즈 (사이드바 하단에 표시) */
+  mascotState: MascotState;
+  /** 보관된 대화 기록 (최신순) */
+  chats: ChatRecord[];
+  onOpenChat: (record: ChatRecord) => void;
+  onDeleteChat: (id: string) => void;
 }
 
 /** 추천 코스 6종 — 카드 제목 + 한 줄 설명 + 채팅 프리셋 질문 */
@@ -81,9 +91,21 @@ const CATEGORY_TITLE: Record<LiveCategory, string> = {
   traffic: "제주 교통",
 };
 
-export default function Sidebar({ open, onClose, onNewChat, onSend, busy, onOpenDensity }: Props) {
+export default function Sidebar({
+  open,
+  onClose,
+  onNewChat,
+  onSend,
+  busy,
+  onOpenDensity,
+  mascotState,
+  chats,
+  onOpenChat,
+  onDeleteChat,
+}: Props) {
   const [courseOpen, setCourseOpen] = useState(false);
   const [liveOpen, setLiveOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [category, setCategory] = useState<LiveCategory | null>(null);
   const [items, setItems] = useState<LiveDetailItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -141,10 +163,65 @@ export default function Sidebar({ open, onClose, onNewChat, onSend, busy, onOpen
 
         <button
           type="button"
+          className={`side-item ${historyOpen ? "active" : ""}`}
+          onClick={() => {
+            setHistoryOpen((v) => !v);
+            setCourseOpen(false);
+            setLiveOpen(false);
+          }}
+        >
+          대화 기록
+        </button>
+        {historyOpen && (
+          <div className="side-submenu">
+            {chats.length === 0 ? (
+              <div className="live-panel-note">아직 저장된 대화가 없어요.</div>
+            ) : (
+              chats.map((c) => (
+                <div key={c.id} className="history-row">
+                  <button
+                    type="button"
+                    className="history-item"
+                    disabled={busy}
+                    onClick={() => {
+                      onOpenChat(c);
+                      setHistoryOpen(false);
+                      onClose();
+                    }}
+                  >
+                    <span className="history-title">{c.title}</span>
+                    <span className="history-date">
+                      {new Date(c.ts).toLocaleDateString("ko-KR", {
+                        month: "short",
+                        day: "numeric",
+                      })}{" "}
+                      {new Date(c.ts).toLocaleTimeString("ko-KR", {
+                        hour: "numeric",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="history-delete"
+                    aria-label="대화 삭제"
+                    onClick={() => onDeleteChat(c.id)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        <button
+          type="button"
           className={`side-item ${courseOpen ? "active" : ""}`}
           onClick={() => {
             setCourseOpen((v) => !v);
             setLiveOpen(false);
+            setHistoryOpen(false);
           }}
         >
           추천 코스
@@ -176,6 +253,7 @@ export default function Sidebar({ open, onClose, onNewChat, onSend, busy, onOpen
           onClick={() => {
             setLiveOpen((v) => !v);
             setCourseOpen(false);
+            setHistoryOpen(false);
           }}
         >
           실시간 정보
@@ -202,7 +280,7 @@ export default function Sidebar({ open, onClose, onNewChat, onSend, busy, onOpen
                 onClose();
               }}
             >
-              외국인 관광객 밀집
+              실시간 외국인 관광객 밀집
             </button>
 
             {category && (
@@ -226,7 +304,18 @@ export default function Sidebar({ open, onClose, onNewChat, onSend, busy, onOpen
                   items.map((item, i) => (
                     <div key={i} className="live-panel-item">
                       <span className="live-panel-label">{item.label}</span>
-                      <span className="live-panel-text">{item.text}</span>
+                      {item.text && <span className="live-panel-text">{item.text}</span>}
+                      {item.links && item.links.length > 0 && (
+                        <ul className="live-panel-links">
+                          {item.links.map((l, j) => (
+                            <li key={j}>
+                              <a href={l.url} target="_blank" rel="noreferrer" title={l.desc}>
+                                {l.label}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   ))
                 )}
@@ -242,6 +331,8 @@ export default function Sidebar({ open, onClose, onNewChat, onSend, busy, onOpen
           로그인 / 회원가입
         </button>
       </nav>
+
+      <FloatingMascot state={mascotState} />
 
       {news.length > 0 && (
         <div className="jeju-card news-card">

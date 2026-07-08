@@ -118,9 +118,17 @@ export async function fetchNews(): Promise<NewsItem[]> {
 /** 사이드바 '실시간 정보' 카테고리 상세 패널. 실패하면 빈 배열. */
 export type LiveCategory = "fuel" | "weather" | "traffic";
 
+/** 상세 항목에 딸린 외부 링크 (예: 최저가 주유소 → 카카오맵 검색) */
+export interface LiveDetailLink {
+  label: string;
+  url: string;
+  desc?: string;
+}
+
 export interface LiveDetailItem {
   label: string;
   text: string;
+  links?: LiveDetailLink[];
 }
 
 export async function fetchLiveDetail(

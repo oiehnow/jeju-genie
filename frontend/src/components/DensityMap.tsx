@@ -1,5 +1,5 @@
 /**
- * 외국인 관광객 밀집 지도 — 메인 영역 위 오버레이 카드.
+ * 실시간 외국인 관광객 밀집 지도 — 메인 영역 위 오버레이 카드.
  *  - /api/live/density의 points를 CircleMarker로 표시 (level 1=빨강 크게 / 2=주황 / 3=노랑)
  *  - 상단: 기준 시점(asof) + 범례 + 새로고침 / 닫기 버튼
  *  - 백엔드 미가동/실패 시 빈 상태 안내만 표시 (지도 자체는 유지)
@@ -55,7 +55,8 @@ export default function DensityMap({ onClose }: { onClose: () => void }) {
           <div>
             <p className="density-title">외국인 관광객 밀집 지도</p>
             <p className="density-asof">
-              {data?.asof ? `${data.asof} 기준 · 카드 이용액 규모` : "카드 이용액 기반 밀집도"}
+              {/* asof는 "2026-04 기준" 형태로 옴 — '기준'을 덧붙이지 않는다 */}
+              {data?.asof ? `${data.asof} · 외국 카드 사용 내역 기반` : "외국 카드 사용 내역 기반"}
             </p>
           </div>
           <div className="density-actions">
@@ -85,7 +86,7 @@ export default function DensityMap({ onClose }: { onClose: () => void }) {
             />
             {points.map((p, i) => {
               const s = LEVEL_STYLE[p.level] ?? LEVEL_STYLE[3];
-              const caption = `${p.name} — 이용액 규모 ${p.value.toLocaleString("ko-KR")}`;
+              const caption = `${p.name} — 카드 사용 규모 ${p.value.toLocaleString("ko-KR")}`;
               return (
                 <CircleMarker
                   key={`${p.name}-${i}`}

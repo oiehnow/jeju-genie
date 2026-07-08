@@ -56,12 +56,11 @@
   /* 카드/사이드바 */
   --card-radius: 24px;
   --card-shadow: 0 6px 24px rgba(15, 163, 163, 0.08);
-  --sidebar-width: 264px;
+  --sidebar-width: 300px;           /* 사이드바 마스코트가 들어갈 폭 확보 */
 
   /* 마스코트 */
   --mascot-size: 52px;              /* 헤더 원형 액자 */
   --mascot-bg: #ffffff;
-  --floating-mascot-width: 210px;   /* 채팅 카드 우하단 플로팅 마스코트 */
   --avatar-size: 36px;              /* 지니 말풍선 옆 아바타 */
 
   /* 타이포 */

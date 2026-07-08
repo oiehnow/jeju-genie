@@ -1,88 +1,47 @@
 /* ─────────────────────────────────────────────────────────────
-   플로팅 마스코트 확대 스타일 — FloatingMascot.tsx 전용.
-   app.css의 .floating-mascot 규칙을 이기기 위해 클래스를 두 번
-   겹친 선택자(.floating-mascot.floating-mascot)로 특이도를 올린다.
-   (app.css / theme.css는 다른 작업과 충돌하지 않도록 수정 금지)
+   사이드바 마스코트 스타일 — FloatingMascot.tsx 전용 (.sidebar-mascot).
+   로그인/회원가입 메뉴와 "오늘의 제주 뉴스" 카드 사이에 사이드바
+   폭에 맞춰 들어간다 (기존 채팅 카드 우하단 플로팅에서 이동).
 
-   원본 PNG는 2400x1309 와이드 캔버스에 캐릭터가 중앙(가로 약 26~74%)
+   원본 PNG는 와이드 캔버스(약 1.83:1)에 캐릭터가 중앙(가로 약 26~74%)
    에만 그려진 투명 배경 이미지 → 세로형(0.92:1) 박스로 자르고
-   object-fit: cover 로 캐릭터만 화면에 크게 보이게 한다.
+   object-fit: cover 로 캐릭터만 크게 보이게 한다.
    배경이 투명이라 잘린 경계선은 보이지 않는다.
    ───────────────────────────────────────────────────────────── */
 
-.floating-mascot.floating-mascot {
-  right: 18px;
-  bottom: 12px;
-  /* 데스크톱: 화면 높이의 60~70%를 차지하는 대형 마스코트 */
-  width: auto;
-  height: clamp(400px, 64vh, 660px);
-  /* 채팅 카드보다 커지지 않도록 상한 (헤더/입력바 높이 여유분 제외) */
-  max-height: calc(100dvh - 240px);
+.sidebar-mascot {
+  position: relative;
+  width: 100%;
   aspect-ratio: 92 / 100;            /* 캐릭터 영역에 맞춘 세로형 크롭 */
+  margin-top: auto;                  /* 메뉴 아래 여백을 밀어 뉴스 카드 위에 정착 */
+  flex-shrink: 0;                    /* 서브패널이 열려도 찌그러지지 않게 (사이드바가 스크롤됨) */
   overflow: hidden;
-  border-radius: 0;
+  pointer-events: none;
   animation: mascot-float 4.2s ease-in-out infinite;
 }
-.floating-mascot.floating-mascot.talking {
+.sidebar-mascot.talking {
   animation-duration: 1.5s;
 }
 
-/* 상태별 이미지: 겹쳐두고 opacity 페이드 전환(기존 동작 유지) */
-.floating-mascot.floating-mascot img {
+/* 상태별 이미지: 겹쳐두고 opacity 페이드 전환 */
+.sidebar-mascot img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;                 /* 와이드 여백을 잘라 캐릭터만 확대 */
   object-position: 50% 46%;
-  border-radius: 0;
-  box-shadow: none;                  /* 사각 프레임이 비쳐 그림자 전부 제거 */
+  box-shadow: none;                  /* 투명 PNG — 그림자 없음 */
   filter: none;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-.floating-mascot.floating-mascot img.active {
+.sidebar-mascot img.active {
   opacity: 1;
 }
 
-/* 큰 몸집에 맞춘 부드러운 플로팅 (진폭 확대 + 미세한 기울임) */
+/* 부드러운 플로팅 (미세한 기울임 포함) */
 @keyframes mascot-float {
-  0%, 100% { transform: translateY(-9px) rotate(-0.6deg); }
-  50%      { transform: translateY(9px) rotate(0.6deg); }
-}
-
-/* ── 화면이 좁아지면 단계적으로 축소 ── */
-@media (max-width: 1280px) {
-  .floating-mascot.floating-mascot {
-    height: clamp(340px, 54vh, 560px);
-  }
-}
-
-@media (max-width: 1100px) {
-  .floating-mascot.floating-mascot {
-    height: clamp(280px, 44vh, 440px);
-  }
-}
-
-/* 모바일: 기존 크기 수준으로 복귀 (와이드 원본 전체 노출) */
-@media (max-width: 900px) {
-  .floating-mascot.floating-mascot {
-    width: 150px;
-    height: auto;
-    max-height: none;
-    aspect-ratio: 2400 / 1309;
-    right: 12px;
-    bottom: 8px;
-  }
-  .floating-mascot.floating-mascot img {
-    object-position: center;
-    filter: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .floating-mascot.floating-mascot {
-    width: 110px;
-    right: 10px;
-    bottom: 6px;
-    opacity: 0.92;
-  }
+  0%, 100% { transform: translateY(-5px) rotate(-0.6deg); }
+  50%      { transform: translateY(5px) rotate(0.6deg); }
 }

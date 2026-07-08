@@ -10,7 +10,7 @@ import {
   type ToolStatus,
 } from "./api";
 import DensityMap from "./components/DensityMap";
-import FloatingMascot, { type MascotState } from "./components/FloatingMascot";
+import { type MascotState } from "./components/FloatingMascot";
 import MascotSlot from "./components/MascotSlot";
 import MessageBubble, { type Message } from "./components/MessageBubble";
 import Sidebar from "./components/Sidebar";
@@ -21,6 +21,35 @@ const makeWelcome = (): Message => ({
   content: "안녕하세요! 제주에 관한 모든 것을 아는 제주 지니예요. 무엇이 궁금하세요?",
   ts: Date.now(),
 });
+
+/** 저장된 대화 한 건 — 사이드바 '대화 기록' 탭에서 복원 */
+export interface ChatRecord {
+  id: string;
+  title: string;
+  ts: number;
+  messages: Message[];
+}
+
+const CHAT_HISTORY_KEY = "jeju-genie-chat-history";
+const CHAT_HISTORY_MAX = 20;
+
+function loadChatHistory(): ChatRecord[] {
+  try {
+    const raw = localStorage.getItem(CHAT_HISTORY_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveChatHistory(list: ChatRecord[]) {
+  try {
+    localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(list.slice(0, CHAT_HISTORY_MAX)));
+  } catch {
+    /* 저장 실패(용량 등)는 조용히 무시 — 대화 자체는 계속된다 */
+  }
+}
 
 const SUGGESTIONS = [
   "성산일출봉 가는 법 알려줘",
@@ -59,6 +88,7 @@ export default function App() {
   const [now, setNow] = useState<NowInfo | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [densityOpen, setDensityOpen] = useState(false);
+  const [chats, setChats] = useState<ChatRecord[]>(loadChatHistory);
   const scrollRef = useRef<HTMLDivElement>(null);
   /** 후속 질문 요청 유효성 — 새 질문/새 대화가 시작되면 이전 요청 결과를 버린다 */
   const suggestReqRef = useRef(0);
@@ -78,17 +108,69 @@ export default function App() {
     };
   }, []);
 
+  /** 사용자 발화가 있는 현재 대화를 기록 목록 맨 앞에 보관. 갱신된 목록을 돌려준다. */
+  function archiveCurrent(base: ChatRecord[]): ChatRecord[] {
+    const firstUser = messages.find((m) => m.role === "user");
+    if (!firstUser) return base;
+    const record: ChatRecord = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      title: firstUser.content.slice(0, 40),
+      ts: Date.now(),
+      messages: messages.filter((m) => !m.streaming),
+    };
+    return [record, ...base].slice(0, CHAT_HISTORY_MAX);
+  }
+
   function newChat() {
     if (busy) return;
+    const next = archiveCurrent(chats);
+    setChats(next);
+    saveChatHistory(next);
     suggestReqRef.current += 1;
     setFollowUps([]);
     setMessages([makeWelcome()]);
     setMascotState("idle");
   }
 
+  /** 대화 기록 탭에서 과거 대화 복원 — 현재 대화는 보관, 복원된 항목은 목록에서 제거 */
+  function openChat(record: ChatRecord) {
+    if (busy) return;
+    const next = archiveCurrent(chats.filter((c) => c.id !== record.id));
+    setChats(next);
+    saveChatHistory(next);
+    suggestReqRef.current += 1;
+    setFollowUps([]);
+    setMessages(record.messages.length > 0 ? record.messages : [makeWelcome()]);
+    setMascotState("idle");
+  }
+
+  function deleteChat(id: string) {
+    const next = chats.filter((c) => c.id !== id);
+    setChats(next);
+    saveChatHistory(next);
+  }
+
   async function send(text: string) {
     const q = text.trim();
     if (!q || busy) return;
+
+    // 이스터에그: 정확히 'guten tag' 입력 시 — API 호출 없이 즉답 + 전용 마스코트
+    if (q.toLowerCase() === "guten tag") {
+      suggestReqRef.current += 1;
+      setInput("");
+      setFollowUps([]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "user", content: q, ts: Date.now() },
+        { role: "assistant", content: "Auf Wiedersehen!", ts: Date.now() },
+      ]);
+      setMascotState("easteregg");
+      return;
+    }
+
+    // 이스터에그: 영어 질문(한글 없이 알파벳만) → 영어 답변 + 영어 마스코트
+    const isEnglish = /[A-Za-z]/.test(q) && !/[가-힣]/.test(q);
+
     setBusy(true);
     setMascotState("thinking");
     setInput("");
@@ -113,7 +195,7 @@ export default function App() {
     await streamChat(q, history, {
       onToken: (t) => {
         answer += t;
-        setMascotState("answering");
+        setMascotState(isEnglish ? "english" : "answering");
         patchLast((m) => ({ ...m, content: m.content + t }));
       },
       onSources: (sources: Source[]) => patchLast((m) => ({ ...m, sources })),
@@ -124,8 +206,9 @@ export default function App() {
       onDone: () => {
         patchLast((m) => ({ ...m, streaming: false, ts: Date.now() }));
         setBusy(false);
-        // 답변 완료 후에는 다음 질문 전까지 answer(또는 거절이면 sorry) 포즈 유지
-        setMascotState(isSorryAnswer(answer) ? "sorry" : "answered");
+        // 답변 완료 후에는 다음 질문 전까지 포즈 유지
+        // (영어 이스터에그 > 거절 sorry > 일반 answered 순)
+        setMascotState(isEnglish ? "english" : isSorryAnswer(answer) ? "sorry" : "answered");
         // 후속 질문 제안 — 비동기, 실패/빈 배열이면 칩 미표시
         if (answer) {
           fetchSuggestions(q, answer).then((s) => {
@@ -171,6 +254,10 @@ export default function App() {
         onSend={send}
         busy={busy}
         onOpenDensity={() => setDensityOpen(true)}
+        mascotState={mascotState}
+        chats={chats}
+        onOpenChat={openChat}
+        onDeleteChat={deleteChat}
       />
       {sidebarOpen && (
         <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
@@ -223,7 +310,6 @@ export default function App() {
               </div>
             )}
           </div>
-          <FloatingMascot state={mascotState} />
         </div>
 
         <form
