@@ -14,7 +14,11 @@ import { type MascotState } from "./components/FloatingMascot";
 import MascotSlot from "./components/MascotSlot";
 import MessageBubble, { type Message } from "./components/MessageBubble";
 import Sidebar from "./components/Sidebar";
+import eastereggSound from "./assets/easteregg.mp3";
 import "./app.css";
+
+// 이스터에그 효과음 — 인스턴스 1개를 재사용해 연타 시 겹침 재생을 막는다
+const eastereggAudio = new Audio(eastereggSound);
 
 const makeWelcome = (): Message => ({
   role: "assistant",
@@ -165,6 +169,9 @@ export default function App() {
         { role: "assistant", content: "Auf Wiedersehen!", ts: Date.now() },
       ]);
       setMascotState("easteregg");
+      // 효과음 재생 (폼 제출 = 사용자 제스처 직후라 자동재생 정책 통과, 실패는 무시)
+      eastereggAudio.currentTime = 0;
+      eastereggAudio.play().catch(() => {});
       return;
     }
 
