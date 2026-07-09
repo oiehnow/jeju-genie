@@ -20,6 +20,7 @@ import logging
 from typing import AsyncIterator
 from urllib.parse import quote
 
+from app.api_sources import related_api_sources
 from app.config import settings
 from app.prompts import AGENT_TOOL_GUIDE, SYSTEM_PROMPT, build_system_prompt
 from app.tools.base import BaseTool, discover_tools
@@ -235,7 +236,9 @@ async def run_agent(provider, message: str, history: list[dict], store) -> Async
     points = _dedupe_points(map_points)
     if points:
         yield {"type": "map", "points": points}
-    yield {"type": "sources", "sources": _merge_sources(knowledge_tool.hits, tool_refs, message)}
+    # 질문 연관 공공 API 칩(정보성)을 실제 출처 앞에 붙인다
+    sources = related_api_sources(message) + _merge_sources(knowledge_tool.hits, tool_refs, message)
+    yield {"type": "sources", "sources": sources}
     yield {"type": "done"}
 
 
@@ -250,5 +253,6 @@ async def _run_simple(provider, message: str, history: list[dict], store) -> Asy
     except Exception as e:
         logger.exception("LLM stream error")
         yield {"type": "token", "content": f"앗, 지니가 잠깐 말을 잃었어요… ({type(e).__name__})"}
-    yield {"type": "sources", "sources": _merge_sources(hits, [], message)}
+    yield {"type": "sources",
+           "sources": related_api_sources(message) + _merge_sources(hits, [], message)}
     yield {"type": "done"}
