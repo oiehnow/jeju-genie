@@ -259,7 +259,7 @@ def _recent_months(n: int = _DENSITY_LOOKBACK) -> list[str]:
 
 @router.get("/api/live/density")
 async def live_density():
-    """외국인(중국) 관광객 밀집 지역 상위 12곳 — 읍면동 유동인구 기준 (30분 캐시).
+    """외국인 관광객 밀집 지역 상위 12곳 — 읍면동 유동인구 기준 (30분 캐시).
 
     데이터허브 조회가 전부 실패하면 번들 스냅샷으로 폴백한다 (폴백은 캐시 안 함).
     """
