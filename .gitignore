@@ -6,3 +6,8 @@ dist/
 backend/static/
 .env
 *.log
+
+# 내부 문서/산출물 — 로컬 보관
+doc/
+진행상황_HANDOFF.md
+작업내용_*.md
