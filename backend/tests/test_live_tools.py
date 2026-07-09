@@ -161,6 +161,20 @@ def test_장소검색_결과없음(monkeypatch):
     assert "찾지 못했습니다" in out
 
 
+def test_장소검색_제주밖_결과는_버림(monkeypatch):
+    """지역어 제거 재시도가 육지 동명 업소(예: 부산 온천랜드)를 잡아도 제주 범위 필터로 걸러진다."""
+    busan = {"response": {"result": {"items": [{
+        "title": "온천랜드",
+        "address": {"road": "부산광역시 동래구 어디로 1"},
+        "point": {"x": "129.0730", "y": "35.2131"},
+    }]}}}
+    patch_get(monkeypatch, FakeResponse(json_data=busan))
+    tool = live.JejuGeocodeTool()
+    out = run(tool.run(query="서귀포 온천랜드"))
+    assert "찾지 못했습니다" in out
+    assert tool.map_points == [] and tool.refs == []
+
+
 def test_장소검색_지역어제거_재시도(monkeypatch):
     """'서귀포 ○○' 조합이 NOT_FOUND 면 지역어를 떼고 한 번 더 검색한다 (VWorld 실측 보정)."""
     found = FakeResponse(json_data={"response": {"result": {"items": [{

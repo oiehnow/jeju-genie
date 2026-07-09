@@ -56,12 +56,15 @@ def _dedupe_sources(hits: list[dict]) -> list[dict]:
 
 
 def _dedupe_points(points: list[dict]) -> list[dict]:
-    """지도 마커 목록 → 같은 좌표 제거 + 최대 10개 (순서 유지)."""
+    """지도 마커 목록 → 제주 범위 밖 제거 + 같은 좌표 제거 + 최대 10개 (순서 유지)."""
     seen, uniq = set(), []
     for p in points:
         try:
             lat, lng = float(p.get("lat")), float(p.get("lng"))
         except (TypeError, ValueError):
+            continue
+        # 제주 좌표 범위 (마라도~추자도) 밖 마커는 버린다 — 육지 동명 업소 오탐 방지
+        if not (32.9 <= lat <= 34.1 and 125.9 <= lng <= 127.1):
             continue
         key = (round(lat, 6), round(lng, 6))
         if key in seen:

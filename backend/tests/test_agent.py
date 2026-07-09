@@ -272,6 +272,17 @@ def test_map_and_merged_sources(dummy_map_tool):
     ]
 
 
+def test_dedupe_points_drops_non_jeju():
+    """제주 좌표 범위 밖 마커(육지 오탐)는 map 이벤트에서 제외된다."""
+    from app.agent import _dedupe_points
+
+    pts = _dedupe_points([
+        {"name": "부산 온천랜드", "lat": 35.2131, "lng": 129.0730},
+        {"name": "성산일출봉", "lat": 33.4581, "lng": 126.9425},
+    ])
+    assert pts == [{"name": "성산일출봉", "lat": 33.4581, "lng": 126.9425}]
+
+
 def test_map_event_absent_without_points(dummy_live_tool):
     """map_points 를 안 채운 도구만 쓰면 map 이벤트는 나가지 않는다."""
     provider = ScriptedProvider([

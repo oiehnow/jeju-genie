@@ -23,6 +23,20 @@ async def _get(url: str, params: dict | None = None) -> httpx.Response:
         return await c.get(url, params=params or {})
 
 
+# 제주 좌표 범위 (마라도~추자도 포함, WGS84) — 육지 동명 업소 오탐 방지용
+_JEJU_LAT = (32.9, 34.1)
+_JEJU_LNG = (125.9, 127.1)
+
+
+def _in_jeju(point: dict) -> bool:
+    """VWorld point({x:경도, y:위도} 문자열) 가 제주 범위 안인지."""
+    try:
+        lat, lng = float(point.get("y")), float(point.get("x"))
+    except (TypeError, ValueError):
+        return False
+    return _JEJU_LAT[0] <= lat <= _JEJU_LAT[1] and _JEJU_LNG[0] <= lng <= _JEJU_LNG[1]
+
+
 @register_tool
 class JejuWeatherTool(BaseTool):
     name = "jeju_airport_weather"
@@ -137,7 +151,9 @@ class JejuGeocodeTool(BaseTool):
 
     # VWorld 는 '서귀포 찜질방'처럼 지역명이 붙은 조합 질의를 자주 NOT_FOUND 로
     # 처리한다 (2026-07 실측: '탐라사우나' OK, '서귀포 찜질방' NOT_FOUND) —
-    # 못 찾으면 지역어를 떼고 한 번 더 시도한다.
+    # 못 찾으면 지역어를 떼고 한 번 더 시도한다. 단, 지역어를 떼면 육지의 동명
+    # 업소가 잡힐 수 있으므로 (실측: '온천랜드' → 부산) 결과는 제주 좌표 범위로
+    # 거른다.
     _REGION_WORDS = ("제주특별자치도", "제주도", "제주시", "서귀포시", "서귀포", "제주")
 
     def enabled(self) -> bool:
@@ -152,7 +168,8 @@ class JejuGeocodeTool(BaseTool):
             result = r.json().get("response", {}).get("result", {})
         except (httpx.HTTPError, ValueError):
             return []
-        return result.get("items", []) if isinstance(result, dict) else []
+        items = result.get("items", []) if isinstance(result, dict) else []
+        return [it for it in items if _in_jeju(it.get("point", {}))]
 
     async def run(self, query: str = "", **kwargs) -> str:
         if not query:
