@@ -1,6 +1,6 @@
 """제주교통정보센터 C-ITS 관광지 커넥터 — 관광지 콘텐츠를 RAG에 편입.
 
-JEJUITS_CITS_CODE(코드=REDACTED) 가 .env 에 있으면 활성화된다.
+JEJUITS_CITS_CODE 가 .env 에 있으면 활성화된다.
 관광지명/주소/소개 등 텍스트 콘텐츠라 RAG 문서로 적합 (약 1,100+건).
 
 API: http://api.jejuits.go.kr/api/infoTourList?code={code}
