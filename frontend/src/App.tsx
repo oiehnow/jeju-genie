@@ -286,7 +286,7 @@ export default function App() {
           <MascotSlot talking={busy} />
           <div className="header-text">
             <h1>Jeju Genie</h1>
-            <p className="header-sub">제주 여행 AI 컨시어지</p>
+            <p className="header-sub">Everything about Jeju</p>
           </div>
           {now?.temp && (
             <div className="temp-chip" title={now.summary || "현재 제주 기온"}>
