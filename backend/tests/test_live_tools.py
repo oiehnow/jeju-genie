@@ -161,6 +161,28 @@ def test_장소검색_결과없음(monkeypatch):
     assert "찾지 못했습니다" in out
 
 
+def test_장소검색_지역어제거_재시도(monkeypatch):
+    """'서귀포 ○○' 조합이 NOT_FOUND 면 지역어를 떼고 한 번 더 검색한다 (VWorld 실측 보정)."""
+    found = FakeResponse(json_data={"response": {"result": {"items": [{
+        "title": "탐라사우나",
+        "address": {"road": "제주 서귀포시 어디로 1"},
+        "point": {"x": "126.5", "y": "33.5"},
+    }]}}})
+    empty = FakeResponse(json_data={"response": {"status": "NOT_FOUND"}})
+    calls = []
+
+    async def _fake(url, params=None):
+        calls.append(params["query"])
+        return found if params["query"] == "탐라사우나" else empty
+
+    monkeypatch.setattr(live, "_get", _fake)
+    tool = live.JejuGeocodeTool()
+    out = run(tool.run(query="서귀포 탐라사우나"))
+    assert calls == ["서귀포 탐라사우나", "탐라사우나"]
+    assert "탐라사우나" in out
+    assert tool.map_points == [{"name": "탐라사우나", "lat": 33.5, "lng": 126.5}]
+
+
 # ── 데이터허브 통계 ────────────────────────────────────────
 
 FAKE_SOURCES = {"jejudatahub": [

@@ -135,23 +135,36 @@ class JejuGeocodeTool(BaseTool):
         "required": ["query"],
     }
 
+    # VWorld 는 '서귀포 찜질방'처럼 지역명이 붙은 조합 질의를 자주 NOT_FOUND 로
+    # 처리한다 (2026-07 실측: '탐라사우나' OK, '서귀포 찜질방' NOT_FOUND) —
+    # 못 찾으면 지역어를 떼고 한 번 더 시도한다.
+    _REGION_WORDS = ("제주특별자치도", "제주도", "제주시", "서귀포시", "서귀포", "제주")
+
     def enabled(self) -> bool:
         return bool(settings.vworld_api_key)
 
-    async def run(self, query: str = "", **kwargs) -> str:
-        if not query:
-            return "검색어가 필요합니다."
+    async def _search(self, query: str) -> list[dict]:
         try:
             r = await _get("https://api.vworld.kr/req/search",
                            {"service": "search", "request": "search", "version": "2.0",
                             "crs": "EPSG:4326", "query": query, "type": "place",
                             "format": "json", "key": settings.vworld_api_key})
-        except httpx.HTTPError:
-            return f"'{query}' 장소 검색 실패 (네트워크 오류)"
-        try:
-            items = r.json().get("response", {}).get("result", {}).get("items", [])
-        except ValueError:
-            items = []
+            result = r.json().get("response", {}).get("result", {})
+        except (httpx.HTTPError, ValueError):
+            return []
+        return result.get("items", []) if isinstance(result, dict) else []
+
+    async def run(self, query: str = "", **kwargs) -> str:
+        if not query:
+            return "검색어가 필요합니다."
+        items = await self._search(query)
+        if not items:
+            stripped = query
+            for w in self._REGION_WORDS:
+                stripped = stripped.replace(w, " ")
+            stripped = " ".join(stripped.split())
+            if stripped and stripped != query:
+                items = await self._search(stripped)
         if not items:
             return f"'{query}' 위치를 찾지 못했습니다."
         it = items[0]
