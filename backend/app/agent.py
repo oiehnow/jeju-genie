@@ -239,7 +239,7 @@ async def run_agent(provider, message: str, history: list[dict], store) -> Async
     points = _dedupe_points(map_points)
     if points:
         yield {"type": "map", "points": points}
-    # 질문 연관 공공 API 칩(정보성)을 실제 출처 앞에 붙인다
+    # 질문 연관 공공 데이터 API 출처 칩을 출처 목록 앞에 붙인다
     sources = related_api_sources(message) + _merge_sources(knowledge_tool.hits, tool_refs, message)
     yield {"type": "sources", "sources": sources}
     yield {"type": "done"}

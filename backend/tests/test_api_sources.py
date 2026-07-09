@@ -1,4 +1,4 @@
-"""질문 연관 API 출처 칩(정보성) 단위 테스트 + 에이전트 통합 검증."""
+"""질문 연관 공공 데이터 API 출처 칩 단위 테스트 + 에이전트 통합 검증."""
 import asyncio
 import os
 import sys
@@ -13,7 +13,7 @@ def test_hotel_question_yields_api_chips():
     chips = related_api_sources("제주시에 호텔 추천해줘")
     assert 1 <= len(chips) <= 3
     for c in chips:
-        assert c["url"] == ""  # 링크 없는 칩
+        assert c["url"] == ""  # 데이터 소스 단위 출처 — 링크 없는 정보성 칩
         assert c["source"] == "공공데이터 API"
     assert any("숙박" in c["title"] for c in chips)
 
